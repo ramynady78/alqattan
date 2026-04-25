@@ -51,6 +51,10 @@ async function main() {
 
   const frontendOut = path.resolve(repoRoot, "frontend", "dist", "public");
   const backendClientOut = path.resolve(repoRoot, "backend", "public", "app");
+  const backendIndexHtml = path.join(backendClientOut, "index.html");
+
+  console.log(`[render-build] frontendOut=${frontendOut}`);
+  console.log(`[render-build] backendClientOut=${backendClientOut}`);
 
   if (!(await pathExists(frontendOut))) {
     throw new Error(`Frontend build output not found at: ${frontendOut}`);
@@ -59,6 +63,8 @@ async function main() {
   await rm(backendClientOut, { recursive: true, force: true });
   await ensureDirExists(backendClientOut);
   await cp(frontendOut, backendClientOut, { recursive: true });
+
+  console.log(`[render-build] index.html exists=${await pathExists(backendIndexHtml)}`);
 
   runNpm(["run", "build:backend"]);
 }

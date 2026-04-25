@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { buildSessionMiddleware } from "./lib/auth";
@@ -66,7 +67,9 @@ app.use("/api", router);
 const nodeEnv = process.env["NODE_ENV"] ?? "development";
 
 if (nodeEnv === "production") {
-  const clientDir = path.resolve(process.cwd(), "public", "app");
+  const backendRootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const clientDir = path.resolve(backendRootDir, "public", "app");
+  const indexHtmlPath = path.join(clientDir, "index.html");
 
   app.use(
     express.static(clientDir, {
@@ -74,14 +77,18 @@ if (nodeEnv === "production") {
     }),
   );
 
-  app.get("*", (req, res, next) => {
+  app.use((req, res, next) => {
     if (req.path.startsWith("/api")) return next();
+
     if (req.method !== "GET" && req.method !== "HEAD") return next();
+    if (req.path.includes(".")) return next();
 
-    const accept = req.headers.accept ?? "";
-    if (!accept.includes("text/html")) return next();
+    if (req.method === "GET") {
+      const accept = req.headers.accept ?? "";
+      if (!accept.includes("text/html")) return next();
+    }
 
-    res.sendFile(path.join(clientDir, "index.html"));
+    res.sendFile(indexHtmlPath);
   });
 }
 
