@@ -63,13 +63,34 @@ app.use("/api/static", express.static(path.resolve(process.cwd(), "public")));
 
 app.use("/api", router);
 
+const nodeEnv = process.env["NODE_ENV"] ?? "development";
+
+if (nodeEnv === "production") {
+  const clientDir = path.resolve(process.cwd(), "public", "app");
+
+  app.use(
+    express.static(clientDir, {
+      index: false,
+    }),
+  );
+
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) return next();
+    if (req.method !== "GET" && req.method !== "HEAD") return next();
+
+    const accept = req.headers.accept ?? "";
+    if (!accept.includes("text/html")) return next();
+
+    res.sendFile(path.join(clientDir, "index.html"));
+  });
+}
+
 app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   logger.error({ err, method: req.method, url: req.url?.split("?")[0] }, "Unhandled error");
   // Let pino-http include the real error object (and stack) in its automatic request log.
   // It checks `res.err` when logging "request errored".
   (res as unknown as { err?: unknown }).err = err;
 
-  const nodeEnv = process.env["NODE_ENV"] ?? "development";
   const code = extractErrorCode(err);
   const isDbAuth = code === "28P01";
   const isDbMissing = code === "3D000";

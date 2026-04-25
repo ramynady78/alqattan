@@ -12,6 +12,7 @@
     "build": "node ./build.mjs",
     "prestart": "npm run build",
     "start": "node --env-file .env --enable-source-maps ./dist/index.mjs",
+    "start:render": "node --enable-source-maps ./dist/index.mjs",
     "seed": "npm run build && node --env-file .env --enable-source-maps ./dist/seed.mjs",
     "migrate": "npm run build && node --env-file .env --enable-source-maps ./dist/migrate.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"

@@ -46,3 +46,6 @@ Thumbs.db
 
 
 .env*
+
+# Render build output (copied from frontend to backend for single-service deploy)
+/backend/public/app
