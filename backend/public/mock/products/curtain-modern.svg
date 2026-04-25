@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b3b2e"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1500" fill="url(#g)"/>
+  <rect x="90" y="110" width="1020" height="1280" rx="40" fill="#052e1f" opacity="0.55"/>
+
+  <g opacity="0.35" fill="#ffffff">
+    <rect x="160" y="560" width="880" height="16" rx="8"/>
+    <rect x="160" y="620" width="620" height="16" rx="8"/>
+    <rect x="160" y="680" width="780" height="16" rx="8"/>
+    <rect x="160" y="740" width="540" height="16" rx="8"/>
+    <rect x="160" y="800" width="840" height="16" rx="8"/>
+  </g>
+
+  <text x="140" y="260" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="58" fill="#ffffff" font-weight="900">
+    ستائر مودرن
+  </text>
+  <text x="140" y="330" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="28" fill="#d1fae5">
+    صورة تجريبية للمنتج
+  </text>
+</svg>

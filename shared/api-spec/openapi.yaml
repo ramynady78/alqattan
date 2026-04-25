@@ -1,0 +1,679 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Al Qattan Curtains showroom API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+  - name: auth
+  - name: categories
+  - name: products
+  - name: gallery
+  - name: inquiries
+  - name: settings
+  - name: admin
+  - name: storage
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HealthStatus" }
+
+  /auth/login:
+    post:
+      operationId: adminLogin
+      tags: [auth]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LoginBody" }
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminUser" }
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+  /auth/logout:
+    post:
+      operationId: adminLogout
+      tags: [auth]
+      summary: Admin logout
+      responses:
+        "204":
+          description: Logged out
+  /auth/me:
+    get:
+      operationId: getCurrentAdmin
+      tags: [auth]
+      summary: Get current admin session
+      responses:
+        "200":
+          description: Current admin (or null when not authenticated)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminUserOrNull" }
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List all categories
+      responses:
+        "200":
+          description: Categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Category" }
+    post:
+      operationId: createCategory
+      tags: [categories, admin]
+      summary: Create category (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+  /categories/{id}:
+    patch:
+      operationId: updateCategory
+      tags: [categories, admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryInput" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+    delete:
+      operationId: deleteCategory
+      tags: [categories, admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+  /categories/by-slug/{slug}:
+    get:
+      operationId: getCategoryBySlug
+      tags: [categories]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Category
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+  /products:
+    get:
+      operationId: listProducts
+      tags: [products]
+      summary: List products
+      parameters:
+        - name: categoryId
+          in: query
+          required: false
+          schema: { type: integer }
+        - name: search
+          in: query
+          required: false
+          schema: { type: string }
+        - name: featured
+          in: query
+          required: false
+          schema: { type: boolean }
+        - name: page
+          in: query
+          required: false
+          schema: { type: integer }
+        - name: limit
+          in: query
+          required: false
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Products
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProductListResponse" }
+    post:
+      operationId: createProduct
+      tags: [products, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Product" }
+  /products/{id}:
+    patch:
+      operationId: updateProduct
+      tags: [products, admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProductInput" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Product" }
+    delete:
+      operationId: deleteProduct
+      tags: [products, admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+  /products/by-slug/{slug}:
+    get:
+      operationId: getProductBySlug
+      tags: [products]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Product
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Product" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+  /products/{id}/related:
+    get:
+      operationId: getRelatedProducts
+      tags: [products]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Related products
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Product" }
+
+  /gallery:
+    get:
+      operationId: listGallery
+      tags: [gallery]
+      responses:
+        "200":
+          description: Gallery items
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/GalleryItem" }
+    post:
+      operationId: createGalleryItem
+      tags: [gallery, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/GalleryInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GalleryItem" }
+  /gallery/{id}:
+    patch:
+      operationId: updateGalleryItem
+      tags: [gallery, admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/GalleryInput" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GalleryItem" }
+    delete:
+      operationId: deleteGalleryItem
+      tags: [gallery, admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+
+  /inquiries:
+    post:
+      operationId: createInquiry
+      tags: [inquiries]
+      summary: Submit an inquiry (public)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/InquiryInput" }
+      responses:
+        "201":
+          description: Inquiry created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Inquiry" }
+    get:
+      operationId: listInquiries
+      tags: [inquiries, admin]
+      summary: List inquiries (admin)
+      responses:
+        "200":
+          description: Inquiries
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Inquiry" }
+  /inquiries/{id}:
+    patch:
+      operationId: updateInquiry
+      tags: [inquiries, admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/InquiryUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Inquiry" }
+    delete:
+      operationId: deleteInquiry
+      tags: [inquiries, admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+
+  /settings:
+    get:
+      operationId: getSettings
+      tags: [settings]
+      summary: Get site settings (public)
+      responses:
+        "200":
+          description: Settings
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Settings" }
+    patch:
+      operationId: updateSettings
+      tags: [settings, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SettingsInput" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Settings" }
+
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [admin]
+      summary: Dashboard stats
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminStats" }
+
+  /storage/uploads/request-url:
+    post:
+      operationId: requestUploadUrl
+      tags: [storage]
+      summary: Request a presigned upload URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UploadUrlRequest" }
+      responses:
+        "200":
+          description: Upload URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UploadUrlResponse" }
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string }
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+
+    LoginBody:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string }
+        password: { type: string }
+
+    AdminUser:
+      type: object
+      required: [id, email, name]
+      properties:
+        id: { type: integer }
+        email: { type: string }
+        name: { type: string }
+
+    AdminUserOrNull:
+      anyOf:
+        - { $ref: "#/components/schemas/AdminUser" }
+        - { type: "null" }
+
+    Category:
+      type: object
+      required: [id, name, nameEn, slug, description, imageUrl, sortOrder, createdAt]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        nameEn: { type: ["string", "null"] }
+        slug: { type: string }
+        description: { type: ["string", "null"] }
+        imageUrl: { type: ["string", "null"] }
+        sortOrder: { type: integer }
+        createdAt: { type: string, format: date-time }
+
+    CategoryInput:
+      type: object
+      required: [name, slug]
+      properties:
+        name: { type: string }
+        nameEn: { type: ["string", "null"] }
+        slug: { type: string }
+        description: { type: ["string", "null"] }
+        imageUrl: { type: ["string", "null"] }
+        sortOrder: { type: integer }
+
+    Product:
+      type: object
+      required: [id, name, nameEn, slug, description, specs, price, priceText, categoryId, categoryName, images, isFeatured, isAvailable, createdAt]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        nameEn: { type: ["string", "null"] }
+        slug: { type: string }
+        description: { type: ["string", "null"] }
+        specs: { type: ["string", "null"] }
+        price: { type: ["number", "null"] }
+        priceText: { type: ["string", "null"] }
+        categoryId: { type: ["integer", "null"] }
+        categoryName: { type: ["string", "null"] }
+        images:
+          type: array
+          items: { type: string }
+        isFeatured: { type: boolean }
+        isAvailable: { type: boolean }
+        createdAt: { type: string, format: date-time }
+
+    ProductInput:
+      type: object
+      required: [name, slug]
+      properties:
+        name: { type: string }
+        nameEn: { type: ["string", "null"] }
+        slug: { type: string }
+        description: { type: ["string", "null"] }
+        specs: { type: ["string", "null"] }
+        price: { type: ["number", "null"] }
+        priceText: { type: ["string", "null"] }
+        categoryId: { type: ["integer", "null"] }
+        images:
+          type: array
+          items: { type: string }
+        isFeatured: { type: boolean }
+        isAvailable: { type: boolean }
+
+    ProductListResponse:
+      type: object
+      required: [items, total, page, limit]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Product" }
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+
+    GalleryItem:
+      type: object
+      required: [id, title, description, imageUrl, sortOrder, createdAt]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        description: { type: ["string", "null"] }
+        imageUrl: { type: string }
+        sortOrder: { type: integer }
+        createdAt: { type: string, format: date-time }
+
+    GalleryInput:
+      type: object
+      required: [title, imageUrl]
+      properties:
+        title: { type: string }
+        description: { type: ["string", "null"] }
+        imageUrl: { type: string }
+        sortOrder: { type: integer }
+
+    Inquiry:
+      type: object
+      required: [id, name, phone, email, message, items, status, createdAt]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        phone: { type: string }
+        email: { type: ["string", "null"] }
+        message: { type: ["string", "null"] }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/InquiryItem" }
+        status: { type: string, enum: [new, contacted, closed] }
+        createdAt: { type: string, format: date-time }
+
+    InquiryItem:
+      type: object
+      required: [productId, productName, quantity]
+      properties:
+        productId: { type: integer }
+        productName: { type: string }
+        quantity: { type: integer }
+
+    InquiryInput:
+      type: object
+      required: [name, phone]
+      properties:
+        name: { type: string }
+        phone: { type: string }
+        email: { type: ["string", "null"] }
+        message: { type: ["string", "null"] }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/InquiryItem" }
+
+    InquiryUpdate:
+      type: object
+      properties:
+        status: { type: string, enum: [new, contacted, closed] }
+
+    Settings:
+      type: object
+      required: [phone, whatsapp, email, address, mapEmbedUrl, instagram, snapchat, twitter, brandTagline, heroTitle, heroSubtitle, aboutText]
+      properties:
+        phone: { type: string }
+        whatsapp: { type: string }
+        email: { type: string }
+        address: { type: string }
+        mapEmbedUrl: { type: string }
+        instagram: { type: string }
+        snapchat: { type: string }
+        twitter: { type: string }
+        brandTagline: { type: string }
+        heroTitle: { type: string }
+        heroSubtitle: { type: string }
+        aboutText: { type: string }
+
+    SettingsInput:
+      type: object
+      properties:
+        phone: { type: string }
+        whatsapp: { type: string }
+        email: { type: string }
+        address: { type: string }
+        mapEmbedUrl: { type: string }
+        instagram: { type: string }
+        snapchat: { type: string }
+        twitter: { type: string }
+        brandTagline: { type: string }
+        heroTitle: { type: string }
+        heroSubtitle: { type: string }
+        aboutText: { type: string }
+
+    AdminStats:
+      type: object
+      required: [productsCount, categoriesCount, galleryCount, inquiriesCount, newInquiriesCount, featuredCount, recentInquiries, productsByCategory]
+      properties:
+        productsCount: { type: integer }
+        categoriesCount: { type: integer }
+        galleryCount: { type: integer }
+        inquiriesCount: { type: integer }
+        newInquiriesCount: { type: integer }
+        featuredCount: { type: integer }
+        recentInquiries:
+          type: array
+          items: { $ref: "#/components/schemas/Inquiry" }
+        productsByCategory:
+          type: array
+          items:
+            type: object
+            required: [categoryId, categoryName, count]
+            properties:
+              categoryId: { type: integer }
+              categoryName: { type: string }
+              count: { type: integer }
+
+    UploadUrlRequest:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name: { type: string }
+        size: { type: integer }
+        contentType: { type: string }
+
+    UploadUrlResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL: { type: string }
+        objectPath: { type: string }
