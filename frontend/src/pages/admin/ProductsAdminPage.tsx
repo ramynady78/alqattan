@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useListProducts,
   useCreateProduct,
@@ -39,14 +39,9 @@ import { useDocumentTitle } from "@/lib/seo";
 import { AdminTableRowsSkeleton } from "@/components/loading/skeletons/AdminSkeletons";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { slugifyEnglish } from "@/lib/slugs";
 
-function generateSlug(text: string) {
-  return text
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w\-أ-ي]/g, "");
-}
+type FeaturedFilter = "all" | "featured" | "non-featured";
 
 export default function ProductsAdminPage() {
   useDocumentTitle("إدارة المنتجات");
@@ -54,6 +49,8 @@ export default function ProductsAdminPage() {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [featuredFilter, setFeaturedFilter] = useState<FeaturedFilter>("all");
 
   const { data: categories } = useListCategories();
   const categoriesList = Array.isArray(categories) ? categories : [];
@@ -62,6 +59,13 @@ export default function ProductsAdminPage() {
     page,
     limit: 10,
     search: search.trim() ? search.trim() : undefined,
+    categoryId: categoryFilter !== "all" ? parseInt(categoryFilter, 10) : undefined,
+    featured:
+      featuredFilter === "all"
+        ? undefined
+        : featuredFilter === "featured"
+          ? true
+          : false,
   });
   const { data: productsData, isLoading, isError } = productsQuery;
 
@@ -76,6 +80,8 @@ export default function ProductsAdminPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [slugTouched, setSlugTouched] = useState(false);
+  const [englishNameError, setEnglishNameError] = useState("");
 
   const [formData, setFormData] = useState<ProductInput>({
     name: "",
@@ -101,6 +107,8 @@ export default function ProductsAdminPage() {
 
   const handleOpenCreate = () => {
     setEditingId(null);
+    setSlugTouched(false);
+    setEnglishNameError("");
     setFormData({
       name: "",
       nameEn: "",
@@ -119,6 +127,8 @@ export default function ProductsAdminPage() {
 
   const handleOpenEdit = (product: Product) => {
     setEditingId(product.id);
+    setSlugTouched(false);
+    setEnglishNameError("");
     setFormData({
       name: product.name,
       nameEn: product.nameEn ?? "",
@@ -135,45 +145,66 @@ export default function ProductsAdminPage() {
     setIsFormOpen(true);
   };
 
+  useEffect(() => {
+    setPage(1);
+  }, [search, categoryFilter, featuredFilter]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
       toast.error("يرجى إدخال اسم المنتج");
       return;
     }
-    if (!formData.slug.trim()) {
-      toast.error("يرجى إدخال الرابط الدائم (Slug)");
+    const normalizedEnglishName = formData.nameEn?.trim() ?? "";
+    if (!normalizedEnglishName) {
+      setEnglishNameError("الاسم الإنجليزي مطلوب لإنشاء رابط المنتج.");
+      toast.error("يرجى إدخال الاسم الإنجليزي للمنتج");
       return;
     }
-    if (!formData.categoryId) {
+    const generatedSlug = slugifyEnglish(normalizedEnglishName);
+    if (!generatedSlug) {
+      setEnglishNameError("الاسم الإنجليزي يجب أن يحتوي على أحرف أو أرقام إنجليزية صالحة.");
+      toast.error("تعذر إنشاء الرابط من الاسم الإنجليزي");
+      return;
+    }
+    const payload: ProductInput = {
+      ...formData,
+      nameEn: normalizedEnglishName,
+      slug: slugTouched && formData.slug.trim() ? slugifyEnglish(formData.slug) : generatedSlug,
+    };
+    if (!payload.slug) {
+      toast.error("يرجى إدخال رابط دائم صالح");
+      return;
+    }
+    if (!payload.categoryId) {
       toast.error("يرجى اختيار تصنيف");
       return;
     }
 
     if (editingId) {
       updateProduct.mutate(
-        { id: editingId, data: formData },
+        { id: editingId, data: payload },
         {
           onSuccess: () => {
             toast.success("تم حفظ التعديلات بنجاح");
             invalidate();
             setIsFormOpen(false);
           },
-          onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
+          onError: (error) => toast.error(error instanceof Error ? error.message : "حدث خطأ، حاول مرة أخرى"),
         },
       );
       return;
     }
 
     createProduct.mutate(
-      { data: formData },
+      { data: payload },
       {
         onSuccess: () => {
           toast.success("تمت إضافة المنتج بنجاح");
           invalidate();
           setIsFormOpen(false);
         },
-        onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
+        onError: (error) => toast.error(error instanceof Error ? error.message : "حدث خطأ، حاول مرة أخرى"),
       },
     );
   };
@@ -195,11 +226,17 @@ export default function ProductsAdminPage() {
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    if (!editingId) {
-      setFormData((p) => ({ ...p, name: val, slug: generateSlug(val) }));
-      return;
-    }
     setFormData((p) => ({ ...p, name: val }));
+  };
+
+  const handleEnglishNameChange = (value: string) => {
+    const generatedSlug = slugifyEnglish(value);
+    setEnglishNameError("");
+    setFormData((prev) => ({
+      ...prev,
+      nameEn: value,
+      slug: !slugTouched || !prev.slug.trim() ? generatedSlug : prev.slug,
+    }));
   };
 
   return (
@@ -214,10 +251,7 @@ export default function ProductsAdminPage() {
               <Input
                 placeholder="بحث في المنتجات..."
                 value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setPage(1);
-                }}
+                onChange={(e) => setSearch(e.target.value)}
                 className="pr-10"
               />
             </div>
@@ -231,20 +265,66 @@ export default function ProductsAdminPage() {
 
       <AdminTableShell
         toolbar={
-          <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-            <div className="text-sm text-muted-foreground">
-              إجمالي: <span className="font-medium text-foreground">{total}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
-                السابق
-              </Button>
-              <div className="text-sm tabular-nums">
-                صفحة {page} من {pages}
+          <div className="flex flex-col gap-4">
+            <div className="grid gap-3 md:grid-cols-[minmax(220px,1fr)_minmax(220px,1fr)_auto] md:items-end">
+              <div className="space-y-2">
+                <div className="text-sm font-medium">التصنيف</div>
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="كل التصنيفات" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">كل التصنيفات</SelectItem>
+                    {categoriesList.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id.toString()}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-              <Button variant="outline" size="sm" disabled={page >= pages} onClick={() => setPage((p) => Math.min(pages, p + 1))}>
-                التالي
+              <div className="space-y-2">
+                <div className="text-sm font-medium">حالة التمييز</div>
+                <Select value={featuredFilter} onValueChange={(value) => setFeaturedFilter(value as FeaturedFilter)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="كل المنتجات" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">كل المنتجات</SelectItem>
+                    <SelectItem value="featured">المنتجات المميزة فقط</SelectItem>
+                    <SelectItem value="non-featured">المنتجات غير المميزة فقط</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                className="md:w-auto"
+                onClick={() => {
+                  setSearch("");
+                  setCategoryFilter("all");
+                  setFeaturedFilter("all");
+                }}
+              >
+                إعادة ضبط الفلاتر
               </Button>
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="text-sm text-muted-foreground">
+                إجمالي: <span className="font-medium text-foreground">{total}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+                  السابق
+                </Button>
+                <div className="text-sm tabular-nums">
+                  صفحة {page} من {pages}
+                </div>
+                <Button variant="outline" size="sm" disabled={page >= pages} onClick={() => setPage((p) => Math.min(pages, p + 1))}>
+                  التالي
+                </Button>
+              </div>
             </div>
           </div>
         }
@@ -331,10 +411,18 @@ export default function ProductsAdminPage() {
         </Table>
       </AdminTableShell>
 
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+      <Dialog
+        open={isFormOpen}
+        onOpenChange={(open) => {
+          setIsFormOpen(open);
+          if (!open) {
+            setEnglishNameError("");
+          }
+        }}
+      >
         <DialogContent className="w-[calc(100vw-2rem)] max-w-4xl p-0">
           <form onSubmit={handleSubmit} className="flex max-h-[90vh] flex-col">
-            <div className="flex items-start justify-between gap-4 border-b bg-card/70 px-5 py-4 backdrop-blur">
+            <div className="flex items-start justify-between gap-4 border-b bg-card/70 px-5 py-4 pl-16 backdrop-blur">
               <div className="min-w-0">
                 <DialogTitle className="text-lg font-semibold">
                   {editingId ? "تعديل منتج" : "إضافة منتج"}
@@ -362,14 +450,24 @@ export default function ProductsAdminPage() {
                   <Input required id="name" value={formData.name} onChange={handleNameChange} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="nameEn">الاسم بالإنجليزية</Label>
+                  <Label htmlFor="nameEn">
+                    الاسم بالإنجليزية <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="nameEn"
+                    required
                     value={formData.nameEn || ""}
-                    onChange={(e) => setFormData((p) => ({ ...p, nameEn: e.target.value }))}
+                    onChange={(e) => handleEnglishNameChange(e.target.value)}
                     dir="ltr"
-                    className="text-right"
+                    className="text-left"
                   />
+                  {englishNameError ? (
+                    <p className="text-sm text-destructive">{englishNameError}</p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      مطلوب لإنشاء رابط المنتج بشكل صحيح.
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -400,10 +498,16 @@ export default function ProductsAdminPage() {
                     required
                     id="slug"
                     value={formData.slug}
-                    onChange={(e) => setFormData((p) => ({ ...p, slug: e.target.value }))}
+                    onChange={(e) => {
+                      setSlugTouched(true);
+                      setFormData((p) => ({ ...p, slug: slugifyEnglish(e.target.value) }));
+                    }}
                     dir="ltr"
-                    className="text-right"
+                    className="text-left"
                   />
+                  <p className="text-xs text-muted-foreground">
+                    يُولَّد تلقائيًا من الاسم الإنجليزي ويمكن تعديله يدويًا إذا لزم.
+                  </p>
                 </div>
 
                 <div className="space-y-2">

@@ -8,6 +8,7 @@ import { useCart } from "@/lib/inquiryCart";
 import { toast } from "sonner";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 import { Link } from "react-router-dom";
+import { buildProductUrl } from "@/lib/routes";
 
 export function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
@@ -21,7 +22,7 @@ export function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <Link to={`/products/${product.slug}`} className="block h-full w-full min-w-0">
+    <Link to={buildProductUrl(product)} className="block h-full w-full min-w-0">
       <Card className="group overflow-hidden cursor-pointer rounded-2xl sm:rounded-3xl lux-surface lux-outline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg h-full w-full min-w-0 flex flex-col">
         <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted shrink-0">
           {mainImage ? (

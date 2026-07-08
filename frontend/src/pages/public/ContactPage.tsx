@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { Reveal } from "@/components/motion/Reveal";
 import { resolveContactLinks } from "@/config/contactLinks";
 import { FaFacebookF, FaInstagram, FaSnapchat, FaWhatsapp } from "react-icons/fa6";
+import { PublicPageHero } from "@/components/site/PublicPageHero";
 
 export default function ContactPage() {
   useDocumentTitle("تواصل معنا");
@@ -93,176 +94,188 @@ export default function ContactPage() {
   );
 
   return (
-    <div className="lux-section lux-noise">
-      <div className="lux-container max-w-6xl">
-        <Reveal>
-          <SectionHeader title="تواصل معنا" subtitle="نحن هنا لخدمتك" align="center" />
-        </Reveal>
+    <div>
+      <PublicPageHero
+        title="تواصل معنا"
+        subtitle="نحن هنا لمساعدتك في اختيار القماش، القياسات، والتفصيل الأنسب لمساحتك."
+        breadcrumbs={[
+          { label: "الرئيسية", href: "/" },
+          { label: "تواصل معنا" },
+        ]}
+        backgroundImage="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=2200&q=80"
+      />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 mt-6 sm:mt-10">
-          <div className="lg:col-span-1 space-y-5">
-            <Reveal>
-              <InfoCard
-                icon={<Phone className="h-6 w-6 text-primary" />}
-                title="الهاتف"
-                value={links.phone.value}
-                dir="ltr"
-                href={links.phone.href}
-              />
-            </Reveal>
-            <Reveal delay={0.05}>
-              <InfoCard
-                icon={<Mail className="h-6 w-6 text-primary" />}
-                title="البريد الإلكتروني"
-                value={links.email.value}
-                href={links.email.href}
-              />
-            </Reveal>
-            <Reveal delay={0.1}>
-              <InfoCard
-                icon={<MapPin className="h-6 w-6 text-primary" />}
-                title="العنوان"
-                value={settings?.address || "غير متوفر"}
-              />
-            </Reveal>
-            <Reveal delay={0.15}>
-              <InfoCard
-                icon={<Clock className="h-6 w-6 text-primary" />}
-                title="ساعات العمل"
-                value={"السبت - الخميس\n9:00 ص - 10:00 م"}
-              />
-            </Reveal>
+      <div className="lux-section lux-noise">
+        <div className="lux-container max-w-6xl">
+          <Reveal>
+            <SectionHeader title="تواصل معنا" subtitle="نحن هنا لخدمتك" align="center" />
+          </Reveal>
 
-            <Reveal delay={0.2}>
-              <Card className="lux-surface lux-outline rounded-3xl">
-                <CardContent className="p-6">
-                  <h4 className="font-bold mb-3">تابعنا</h4>
-                  <div className="flex items-center gap-2">
-                    {links.socials.map((s) => {
-                      const Icon =
-                        s.key === "instagram"
-                          ? FaInstagram
-                          : s.key === "snapchat"
-                            ? FaSnapchat
-                            : s.key === "facebook"
-                              ? FaFacebookF
-                              : FaWhatsapp;
-                      return (
-                        <a
-                          key={s.key}
-                          href={s.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border bg-background/40 hover:bg-muted transition-all hover:-translate-y-0.5 hover:shadow-sm"
-                          aria-label={s.label}
-                          title={s.label}
-                        >
-                          <Icon className="h-4 w-4" />
-                        </a>
-                      );
-                    })}
-                  </div>
-                  <div className="mt-4">
-                    <a
-                      href={links.whatsapp.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-                    >
-                      <FaWhatsapp className="h-4 w-4" />
-                      فتح محادثة واتساب مباشرة
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
-            </Reveal>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 mt-6 sm:mt-10">
+            <div className="lg:col-span-1 space-y-5">
+              <Reveal>
+                <InfoCard
+                  icon={<Phone className="h-6 w-6 text-primary" />}
+                  title="الهاتف"
+                  value={links.phone.value}
+                  dir="ltr"
+                  href={links.phone.href}
+                />
+              </Reveal>
+              <Reveal delay={0.05}>
+                <InfoCard
+                  icon={<Mail className="h-6 w-6 text-primary" />}
+                  title="البريد الإلكتروني"
+                  value={links.email.value}
+                  href={links.email.href}
+                />
+              </Reveal>
+              <Reveal delay={0.1}>
+                <InfoCard
+                  icon={<MapPin className="h-6 w-6 text-primary" />}
+                  title="العنوان"
+                  value={settings?.address || "غير متوفر"}
+                />
+              </Reveal>
+              <Reveal delay={0.15}>
+                <InfoCard
+                  icon={<Clock className="h-6 w-6 text-primary" />}
+                  title="ساعات العمل"
+                  value={"السبت - الخميس\n9:00 ص - 10:00 م"}
+                />
+              </Reveal>
 
-          <div className="lg:col-span-2 space-y-8">
-            <Reveal>
-              <Card className="lux-surface lux-outline rounded-3xl border shadow-sm">
-                <CardContent className="p-5 sm:p-8 md:p-10">
-                  <h3 className="text-xl sm:text-2xl font-serif font-bold mb-4 sm:mb-6">أرسل لنا رسالة</h3>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">
-                          الاسم <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="name"
-                          name="name"
-                          required
-                          value={formData.name}
-                          onChange={handleChange}
-                          className="rounded-2xl"
-                        />
+              <Reveal delay={0.2}>
+                <Card className="lux-surface lux-outline rounded-3xl">
+                  <CardContent className="p-6">
+                    <h4 className="font-bold mb-3">تابعنا</h4>
+                    <div className="flex items-center gap-2">
+                      {links.socials.map((s) => {
+                        const Icon =
+                          s.key === "instagram"
+                            ? FaInstagram
+                            : s.key === "snapchat"
+                              ? FaSnapchat
+                              : s.key === "facebook"
+                                ? FaFacebookF
+                                : FaWhatsapp;
+                        return (
+                          <a
+                            key={s.key}
+                            href={s.href}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex h-10 w-10 items-center justify-center rounded-full border bg-background/40 hover:bg-muted transition-all hover:-translate-y-0.5 hover:shadow-sm"
+                            aria-label={s.label}
+                            title={s.label}
+                          >
+                            <Icon className="h-4 w-4" />
+                          </a>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-4">
+                      <a
+                        href={links.whatsapp.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                      >
+                        <FaWhatsapp className="h-4 w-4" />
+                        فتح محادثة واتساب مباشرة
+                      </a>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Reveal>
+            </div>
+
+            <div className="lg:col-span-2 space-y-8">
+              <Reveal>
+                <Card className="lux-surface lux-outline rounded-3xl border shadow-sm">
+                  <CardContent className="p-5 sm:p-8 md:p-10">
+                    <h3 className="text-xl sm:text-2xl font-serif font-bold mb-4 sm:mb-6">أرسل لنا رسالة</h3>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="name">
+                            الاسم <span className="text-destructive">*</span>
+                          </Label>
+                          <Input
+                            id="name"
+                            name="name"
+                            required
+                            value={formData.name}
+                            onChange={handleChange}
+                            className="rounded-2xl"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="phone">
+                            رقم الجوال <span className="text-destructive">*</span>
+                          </Label>
+                          <Input
+                            id="phone"
+                            name="phone"
+                            required
+                            value={formData.phone}
+                            onChange={handleChange}
+                            dir="ltr"
+                            className="text-right rounded-2xl"
+                          />
+                        </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="phone">
-                          رقم الجوال <span className="text-destructive">*</span>
-                        </Label>
+                        <Label htmlFor="email">البريد الإلكتروني</Label>
                         <Input
-                          id="phone"
-                          name="phone"
-                          required
-                          value={formData.phone}
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
                           onChange={handleChange}
                           dir="ltr"
                           className="text-right rounded-2xl"
                         />
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">البريد الإلكتروني</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        dir="ltr"
-                        className="text-right rounded-2xl"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="message">
-                        رسالتك <span className="text-destructive">*</span>
-                      </Label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        required
-                        rows={5}
-                        value={formData.message}
-                        onChange={handleChange}
-                        className="rounded-2xl"
-                      />
-                    </div>
-                    <Button type="submit" size="lg" className="px-10 rounded-full" disabled={createInquiry.isPending}>
-                      {createInquiry.isPending ? "جاري الإرسال…" : "إرسال الرسالة"}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </Reveal>
-
-            {settings?.mapEmbedUrl && (
-              <Reveal>
-                <div className="rounded-3xl overflow-hidden border lux-outline h-80 bg-muted">
-                  <iframe
-                    src={settings.mapEmbedUrl}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen={true}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="موقع المعرض"
-                  />
-                </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="message">
+                          رسالتك <span className="text-destructive">*</span>
+                        </Label>
+                        <Textarea
+                          id="message"
+                          name="message"
+                          required
+                          rows={5}
+                          value={formData.message}
+                          onChange={handleChange}
+                          className="rounded-2xl"
+                        />
+                      </div>
+                      <Button type="submit" size="lg" className="px-10 rounded-full" disabled={createInquiry.isPending}>
+                        {createInquiry.isPending ? "جاري الإرسال…" : "إرسال الرسالة"}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
               </Reveal>
-            )}
+
+              {settings?.mapEmbedUrl && (
+                <Reveal>
+                  <div className="rounded-3xl overflow-hidden border lux-outline h-80 bg-muted">
+                    <iframe
+                      src={settings.mapEmbedUrl}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen={true}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="موقع المعرض"
+                    />
+                  </div>
+                </Reveal>
+              )}
+            </div>
           </div>
         </div>
       </div>

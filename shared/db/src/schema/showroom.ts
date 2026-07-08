@@ -50,8 +50,10 @@ export const productsTable = pgTable("products", {
 export const galleryTable = pgTable("gallery_items", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
   description: text("description"),
   imageUrl: text("image_url").notNull(),
+  images: text("images").array().notNull().default([]),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

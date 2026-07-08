@@ -2,6 +2,16 @@ import { pool } from "@workspace/db";
 import { hashPassword } from "./auth";
 import { logger } from "./logger";
 
+function slugifyEnglish(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 async function ensureDevelopmentAdmin(): Promise<void> {
   const nodeEnv = process.env["NODE_ENV"] ?? "development";
   if (nodeEnv === "production") return;
@@ -90,8 +100,10 @@ export async function bootstrapDatabase(): Promise<void> {
       create table if not exists gallery_items (
         id serial primary key,
         title varchar(255) not null,
+        slug varchar(255) unique,
         description text,
         image_url text not null,
+        images text[] not null default '{}'::text[],
         sort_order integer not null default 0,
         created_at timestamptz not null default now()
       );
@@ -122,6 +134,44 @@ export async function bootstrapDatabase(): Promise<void> {
         hero_subtitle text not null default '',
         about_text text not null default ''
       );
+    `);
+
+    await pool.query(`
+      alter table gallery_items add column if not exists slug varchar(255);
+      alter table gallery_items add column if not exists images text[] not null default '{}'::text[];
+    `);
+
+    const { rows: galleryRows } = await pool.query<{ id: number; title: string; slug: string | null; image_url: string; images: string[] | null }>(`
+      select id, title, slug, image_url, images from gallery_items order by id asc;
+    `);
+
+    const usedSlugs = new Set<string>();
+    for (const row of galleryRows) {
+      const normalizedExisting = slugifyEnglish(row.slug ?? "");
+      const baseSlug = normalizedExisting || slugifyEnglish(row.title) || `gallery-item-${row.id}`;
+      let nextSlug = baseSlug;
+      let counter = 2;
+      while (usedSlugs.has(nextSlug)) {
+        nextSlug = `${baseSlug}-${counter++}`;
+      }
+      usedSlugs.add(nextSlug);
+
+      const normalizedImages =
+        Array.isArray(row.images) && row.images.length > 0
+          ? row.images
+          : row.image_url
+            ? [row.image_url]
+            : [];
+
+      await pool.query(
+        `update gallery_items set slug = $2, images = $3 where id = $1;`,
+        [row.id, nextSlug, normalizedImages],
+      );
+    }
+
+    await pool.query(`
+      alter table gallery_items alter column slug set not null;
+      create unique index if not exists gallery_items_slug_idx on gallery_items (slug);
     `);
 
     await pool.query(`

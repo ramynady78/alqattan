@@ -4,7 +4,7 @@ import { MapPin, Mail, Phone } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaSnapchat, FaWhatsapp } from "react-icons/fa6";
 import { Reveal } from "@/components/motion/Reveal";
 import { resolveContactLinks } from "@/config/contactLinks";
-import { SITE_NAME_AR, SITE_NAME_EN } from "@/config/site";
+import { SITE_NAME_AR } from "@/config/site";
 
 export function PublicFooter() {
   const { data: settings } = useGetSettings();
@@ -24,7 +24,6 @@ export function PublicFooter() {
                   loading="lazy"
                 />
                 <div>
-                  <div className="text-sm tracking-wide text-muted-foreground">{SITE_NAME_EN}</div>
                   <h3 className="text-xl sm:text-2xl font-serif font-bold text-primary leading-tight">
                     {SITE_NAME_AR}
                   </h3>

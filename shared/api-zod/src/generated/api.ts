@@ -243,8 +243,10 @@ export const GetRelatedProductsResponse = zod.array(
 export const ListGalleryResponseItem = zod.object({
   id: zod.number(),
   title: zod.string(),
+  slug: zod.string(),
   description: zod.string().nullable(),
   imageUrl: zod.string(),
+  images: zod.array(zod.string()),
   sortOrder: zod.number(),
   createdAt: zod.coerce.date(),
 });
@@ -253,7 +255,8 @@ export const ListGalleryResponse = zod.array(ListGalleryResponseItem);
 export const CreateGalleryItemBody = zod.object({
   title: zod.string(),
   description: zod.string().nullish(),
-  imageUrl: zod.string(),
+  imageUrl: zod.string().nullish(),
+  images: zod.array(zod.string()).optional(),
   sortOrder: zod.number().optional(),
 });
 
@@ -264,15 +267,33 @@ export const UpdateGalleryItemParams = zod.object({
 export const UpdateGalleryItemBody = zod.object({
   title: zod.string(),
   description: zod.string().nullish(),
-  imageUrl: zod.string(),
+  imageUrl: zod.string().nullish(),
+  images: zod.array(zod.string()).optional(),
   sortOrder: zod.number().optional(),
 });
 
 export const UpdateGalleryItemResponse = zod.object({
   id: zod.number(),
   title: zod.string(),
+  slug: zod.string(),
   description: zod.string().nullable(),
   imageUrl: zod.string(),
+  images: zod.array(zod.string()),
+  sortOrder: zod.number(),
+  createdAt: zod.coerce.date(),
+});
+
+export const GetGalleryItemBySlugParams = zod.object({
+  slug: zod.coerce.string(),
+});
+
+export const GetGalleryItemBySlugResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  description: zod.string().nullable(),
+  imageUrl: zod.string(),
+  images: zod.array(zod.string()),
   sortOrder: zod.number(),
   createdAt: zod.coerce.date(),
 });

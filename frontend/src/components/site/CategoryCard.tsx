@@ -2,10 +2,11 @@ import { Link } from "react-router-dom";
 import { Category } from "@workspace/api-client-react";
 import { toImageUrl } from "@/lib/imageUrl";
 import { ImagePlaceholder } from "./ImagePlaceholder";
+import { buildCategoryUrl } from "@/lib/routes";
 
 export function CategoryCard({ category }: { category: Category }) {
   return (
-    <Link to={`/products?categoryId=${category.id}`} className="block h-full w-full min-w-0">
+    <Link to={buildCategoryUrl(category)} className="block h-full w-full min-w-0">
       <div className="group relative overflow-hidden rounded-2xl sm:rounded-3xl cursor-pointer lux-surface lux-outline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg h-full w-full min-w-0 flex flex-col">
         <div className="relative aspect-square w-full overflow-hidden bg-muted">
           {category.imageUrl ? (

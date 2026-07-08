@@ -18,6 +18,7 @@ import CategoriesPage from "@/pages/public/CategoriesPage";
 import ProductsPage from "@/pages/public/ProductsPage";
 import ProductDetailPage from "@/pages/public/ProductDetailPage";
 import GalleryPage from "@/pages/public/GalleryPage";
+import GalleryDetailPage from "@/pages/public/GalleryDetailPage";
 import ContactPage from "@/pages/public/ContactPage";
 import InquiryPage from "@/pages/public/InquiryPage";
 import NotFoundPublic from "@/pages/public/NotFoundPublic";
@@ -78,9 +79,11 @@ function AppRoutes() {
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="categories" element={<CategoriesPage />} />
+        <Route path="categories/:slug" element={<ProductsPage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="products/:slug" element={<ProductDetailPage />} />
         <Route path="gallery" element={<GalleryPage />} />
+        <Route path="gallery/:slug" element={<GalleryDetailPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="inquiry" element={<InquiryPage />} />
         <Route path="*" element={<NotFoundPublic />} />

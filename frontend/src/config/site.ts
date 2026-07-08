@@ -1,5 +1,6 @@
 export const SITE_NAME_AR = "الستائر العصرية";
 export const SITE_NAME_EN = "Modern Curtains";
+
 export const SITE_TAGLINE = "ستائر عصرية • تفصيل • تركيب احترافي";
 export const SITE_DESCRIPTION =
   "الستائر العصرية — ستائر عصرية بتفاصيل فاخرة وتنفيذ راقٍ.";

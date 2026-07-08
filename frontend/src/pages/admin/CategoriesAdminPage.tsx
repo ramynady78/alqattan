@@ -16,6 +16,7 @@ import { AdminTableShell } from "@/components/admin/AdminTableShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -56,11 +57,15 @@ export default function CategoriesAdminPage() {
   const deleteCategory = useDeleteCategory();
 
   const [search, setSearch] = useState("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState("all");
   const filtered = useMemo(() => {
     const q = search.trim();
-    if (!q) return items;
-    return items.filter((c) => `${c.name} ${c.nameEn ?? ""} ${c.slug}`.toLowerCase().includes(q.toLowerCase()));
-  }, [items, search]);
+    return items.filter((c) => {
+      const matchesSearch = !q || `${c.name} ${c.nameEn ?? ""} ${c.slug}`.toLowerCase().includes(q.toLowerCase());
+      const matchesCategory = selectedCategoryId === "all" || String(c.id) === selectedCategoryId;
+      return matchesSearch && matchesCategory;
+    });
+  }, [items, search, selectedCategoryId]);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -163,8 +168,21 @@ export default function CategoriesAdminPage() {
         description="إدارة تصنيفات المنتجات (الاسم، الصورة، الترتيب، والرابط الدائم)."
         actions={
           <>
+            
             <div className="w-full sm:w-72">
-              <Input placeholder="بحث في التصنيفات..." value={search} onChange={(e) => setSearch(e.target.value)} />
+              <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
+                <SelectTrigger className="h-12 rounded-2xl border-border/80 bg-background/80 shadow-none">
+                  <SelectValue placeholder="كل التصنيفات" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">كل التصنيفات</SelectItem>
+                  {items.map((cat) => (
+                    <SelectItem key={cat.id} value={String(cat.id)}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <Button onClick={handleOpenCreate} className="gap-2">
               <Plus className="h-4 w-4" />

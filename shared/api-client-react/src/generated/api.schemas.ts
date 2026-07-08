@@ -106,9 +106,11 @@ export interface ProductListResponse {
 export interface GalleryItem {
   id: number;
   title: string;
+  slug: string;
   /** @nullable */
   description: string | null;
   imageUrl: string;
+  images: string[];
   sortOrder: number;
   createdAt: string;
 }
@@ -117,7 +119,9 @@ export interface GalleryInput {
   title: string;
   /** @nullable */
   description?: string | null;
-  imageUrl: string;
+  /** @nullable */
+  imageUrl?: string | null;
+  images?: string[];
   sortOrder?: number;
 }
 

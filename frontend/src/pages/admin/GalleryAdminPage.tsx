@@ -29,7 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ImageUploader } from "@/components/admin/ImageUploader";
+import { MultiImageUploader } from "@/components/admin/MultiImageUploader";
 import { toImageUrl } from "@/lib/imageUrl";
 import { useDocumentTitle } from "@/lib/seo";
 import { AdminTableRowsSkeleton } from "@/components/loading/skeletons/AdminSkeletons";
@@ -54,12 +54,13 @@ export default function GalleryAdminPage() {
     title: "",
     description: "",
     imageUrl: "",
+    images: [],
     sortOrder: 0,
   });
 
   const handleOpenCreate = () => {
     setEditingId(null);
-    setFormData({ title: "", description: "", imageUrl: "", sortOrder: 0 });
+    setFormData({ title: "", description: "", imageUrl: "", images: [], sortOrder: 0 });
     setIsFormOpen(true);
   };
 
@@ -69,6 +70,7 @@ export default function GalleryAdminPage() {
       title: item.title,
       description: item.description ?? "",
       imageUrl: item.imageUrl,
+      images: item.images ?? (item.imageUrl ? [item.imageUrl] : []),
       sortOrder: item.sortOrder,
     });
     setIsFormOpen(true);
@@ -78,18 +80,24 @@ export default function GalleryAdminPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.imageUrl) {
-      toast.error("يرجى رفع صورة للمعرض");
+    const normalizedImages = formData.images?.filter(Boolean) ?? [];
+    if (normalizedImages.length === 0) {
+      toast.error("يرجى رفع صورة واحدة على الأقل للمعرض");
       return;
     }
     if (!formData.title.trim()) {
       toast.error("يرجى إدخال عنوان");
       return;
     }
+    const payload: GalleryInput = {
+      ...formData,
+      imageUrl: normalizedImages[0] ?? formData.imageUrl ?? "",
+      images: normalizedImages,
+    };
 
     if (editingId) {
       updateItem.mutate(
-        { id: editingId, data: formData },
+        { id: editingId, data: payload },
         {
           onSuccess: () => {
             toast.success("تم حفظ التعديلات بنجاح");
@@ -103,7 +111,7 @@ export default function GalleryAdminPage() {
     }
 
     createItem.mutate(
-      { data: formData },
+      { data: payload },
       {
         onSuccess: () => {
           toast.success("تمت إضافة الصورة بنجاح");
@@ -181,7 +189,7 @@ export default function GalleryAdminPage() {
                 <TableRow key={item.id} className="hover:bg-muted/30">
                   <TableCell>
                     <img
-                      src={toImageUrl(item.imageUrl)}
+                      src={toImageUrl(item.images?.[0] || item.imageUrl)}
                       alt={item.title}
                       className="h-16 w-20 rounded-xl object-cover ring-1 ring-black/5"
                       loading="lazy"
@@ -230,11 +238,13 @@ export default function GalleryAdminPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label>
-                    الصورة <span className="text-destructive">*</span>
+                    الصور <span className="text-destructive">*</span>
                   </Label>
-                  <ImageUploader
-                    value={formData.imageUrl || null}
-                    onChange={(url) => setFormData((p) => ({ ...p, imageUrl: url || "" }))}
+                  <MultiImageUploader
+                    value={formData.images ?? []}
+                    onChange={(images) =>
+                      setFormData((p) => ({ ...p, images, imageUrl: images[0] ?? "" }))
+                    }
                   />
                 </div>
 

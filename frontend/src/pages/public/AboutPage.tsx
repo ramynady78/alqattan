@@ -5,6 +5,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Badge } from "@/components/ui/badge";
 import { Award, Sparkles } from "lucide-react";
 import { SITE_NAME_AR } from "@/config/site";
+import { PublicPageHero } from "@/components/site/PublicPageHero";
 
 export default function AboutPage() {
   const { data: settings } = useGetSettings();
@@ -14,6 +15,17 @@ export default function AboutPage() {
 
   return (
     <div>
+      <PublicPageHero
+        title="من نحن"
+        subtitle="حكاية أناقة عربية معاصرة، وخدمة تبدأ من الاستشارة وتنتهي بتركيب يليق بالمكان."
+        breadcrumbs={[
+          { label: "الرئيسية", href: "/" },
+          { label: "من نحن" },
+        ]}
+        backgroundImage="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=2200&q=80"
+        align="center"
+      />
+
       {/* Hero / Story */}
       <section className="lux-section lux-noise">
         <div className="lux-container">

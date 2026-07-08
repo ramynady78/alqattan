@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { useCart } from "@/lib/inquiryCart";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { SITE_NAME_AR, SITE_NAME_EN, SITE_TAGLINE } from "@/config/site";
+import { SITE_NAME_AR, SITE_TAGLINE } from "@/config/site";
 
 export function PublicHeader() {
   const { pathname } = useLocation();
@@ -23,7 +23,7 @@ export function PublicHeader() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full shrink-0 border-b border-border/80 bg-background shadow-sm">
+    <header className="fixed inset-x-0 top-0 z-50 w-full shrink-0 border-b border-border/80 bg-background/95 shadow-sm backdrop-blur">
       <div className="lux-container h-14 sm:h-16 md:h-[74px] flex items-center justify-between gap-2 sm:gap-4">
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -87,9 +87,6 @@ export function PublicHeader() {
                 loading="eager"
               />
               <span className="block min-w-0">
-                <span className="hidden sm:block text-xs md:text-sm tracking-wide text-muted-foreground truncate">
-                  {SITE_NAME_EN}
-                </span>
                 <span className="block text-base sm:text-xl md:text-2xl font-serif font-bold text-primary leading-tight truncate">
                   {SITE_NAME_AR}
                 </span>

@@ -11,6 +11,16 @@ const router: IRouter = Router();
 
 type ProductRow = typeof productsTable.$inferSelect;
 
+function slugifyEnglish(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function serialize(p: ProductRow, categoryName: string | null) {
   return {
     id: p.id,
@@ -176,10 +186,13 @@ router.get("/products/:id/related", async (req, res): Promise<void> => {
 
 function inputToValues(data: unknown) {
   const d = data as Record<string, unknown>;
+  const rawEnglishName = String((d["nameEn"] as string | null | undefined) ?? "").trim();
+  const requestedSlug = String((d["slug"] as string | null | undefined) ?? "");
+  const slug = slugifyEnglish(requestedSlug || rawEnglishName);
   return {
     name: String(d["name"]),
-    nameEn: (d["nameEn"] as string | null | undefined) ?? null,
-    slug: String(d["slug"]),
+    nameEn: rawEnglishName || null,
+    slug,
     description: (d["description"] as string | null | undefined) ?? null,
     specs: (d["specs"] as string | null | undefined) ?? null,
     price:
@@ -194,10 +207,30 @@ function inputToValues(data: unknown) {
   };
 }
 
+async function ensureUniqueSlug(slug: string, excludeId?: number) {
+  const filters = excludeId ? and(eq(productsTable.slug, slug), ne(productsTable.id, excludeId)) : eq(productsTable.slug, slug);
+  const [existing] = await db.select({ id: productsTable.id }).from(productsTable).where(filters);
+  return !existing;
+}
+
 router.post("/products", requireAdmin, async (req, res): Promise<void> => {
   const parsed = CreateProductBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  const englishName = parsed.data.nameEn?.trim() ?? "";
+  const slug = slugifyEnglish(parsed.data.slug || englishName);
+  if (!englishName) {
+    res.status(400).json({ message: "English product name is required" });
+    return;
+  }
+  if (!slug) {
+    res.status(400).json({ message: "Product slug cannot be empty" });
+    return;
+  }
+  if (!(await ensureUniqueSlug(slug))) {
+    res.status(409).json({ message: "A product with this slug already exists" });
     return;
   }
   try {
@@ -230,6 +263,20 @@ router.patch("/products/:id", requireAdmin, async (req, res): Promise<void> => {
   const parsed = UpdateProductBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  const englishName = parsed.data.nameEn?.trim() ?? "";
+  const slug = slugifyEnglish(parsed.data.slug || englishName);
+  if (!englishName) {
+    res.status(400).json({ message: "English product name is required" });
+    return;
+  }
+  if (!slug) {
+    res.status(400).json({ message: "Product slug cannot be empty" });
+    return;
+  }
+  if (!(await ensureUniqueSlug(slug, id))) {
+    res.status(409).json({ message: "A product with this slug already exists" });
     return;
   }
   try {

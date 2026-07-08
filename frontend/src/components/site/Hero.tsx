@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SITE_NAME_AR, SITE_TAGLINE } from "@/config/site";
@@ -63,31 +63,26 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
   const total = effectiveSlides.length;
 
   const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const indexRef = useRef(0);
   indexRef.current = index;
 
   const goTo = (next: number) => setIndex(clampIndex(next, total));
   const next = () => goTo(indexRef.current + 1);
-  const prev = () => goTo(indexRef.current - 1);
 
   useEffect(() => {
     if (reduce) return;
-    if (isPaused) return;
     const id = window.setInterval(() => {
       next();
     }, Math.max(2500, autoplayMs));
     return () => window.clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoplayMs, isPaused, reduce, total]);
+  }, [autoplayMs, reduce, total]);
 
   const slide = effectiveSlides[index]!;
 
   return (
     <section
       className={cn("relative overflow-hidden", className)}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
       aria-label="Hero"
     >
       <div className="relative min-h-[68vh] sm:min-h-[78vh] md:min-h-[86vh] lux-noise">
@@ -200,25 +195,6 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
         </div>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 lux-divider opacity-80" />
-
-        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-3 md:px-6">
-          <button
-            type="button"
-            onClick={next}
-            className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-white/90 backdrop-blur transition hover:bg-black/35"
-            aria-label="التالي"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
-          <button
-            type="button"
-            onClick={prev}
-            className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-white/90 backdrop-blur transition hover:bg-black/35"
-            aria-label="السابق"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-        </div>
       </div>
     </section>
   );
