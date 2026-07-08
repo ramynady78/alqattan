@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import {
   AlertDialog,
@@ -92,11 +92,11 @@ export default function GalleryAdminPage() {
         { id: editingId, data: formData },
         {
           onSuccess: () => {
-            toast.success("تم تحديث عنصر المعرض");
+            toast.success("تم حفظ التعديلات بنجاح");
             invalidate();
             setIsFormOpen(false);
           },
-          onError: () => toast.error("تعذر تحديث عنصر المعرض"),
+          onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
         },
       );
       return;
@@ -106,11 +106,11 @@ export default function GalleryAdminPage() {
       { data: formData },
       {
         onSuccess: () => {
-          toast.success("تمت إضافة عنصر للمعرض");
+          toast.success("تمت إضافة الصورة بنجاح");
           invalidate();
           setIsFormOpen(false);
         },
-        onError: () => toast.error("تعذر إضافة عنصر للمعرض"),
+        onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
       },
     );
   };
@@ -121,11 +121,11 @@ export default function GalleryAdminPage() {
       { id: deleteId },
       {
         onSuccess: () => {
-          toast.success("تم حذف العنصر");
+          toast.success("تم حذف الصورة بنجاح");
           invalidate();
           setDeleteId(null);
         },
-        onError: () => toast.error("تعذر حذف العنصر"),
+        onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
       },
     );
   };
@@ -217,10 +217,12 @@ export default function GalleryAdminPage() {
           <form onSubmit={handleSubmit} className="flex max-h-[90vh] flex-col">
             <div className="flex items-start justify-between gap-4 border-b bg-card/70 px-5 py-4 backdrop-blur">
               <div className="min-w-0">
-                <div className="text-lg font-semibold">{editingId ? "تعديل عنصر" : "إضافة عنصر"}</div>
-                <div className="mt-1 text-sm text-muted-foreground">
+                <DialogTitle className="text-lg font-semibold">
+                  {editingId ? "تعديل عنصر" : "إضافة عنصر"}
+                </DialogTitle>
+                <DialogDescription className="mt-1 text-sm text-muted-foreground">
                   اجعل النموذج مريحاً على جميع الشاشات — المحتوى يتم تمريره داخلياً.
-                </div>
+                </DialogDescription>
               </div>
             </div>
 

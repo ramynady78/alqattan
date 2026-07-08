@@ -40,11 +40,11 @@ export default function ContactPage() {
       },
       {
         onSuccess: () => {
-          toast.success("تم إرسال رسالتك بنجاح. سنعاود التواصل معك قريباً.");
+          toast.success("تم إرسال الطلب بنجاح");
           setFormData({ name: "", phone: "", email: "", message: "" });
         },
         onError: () => {
-          toast.error("حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقاً.");
+          toast.error("حدث خطأ، حاول مرة أخرى");
         },
       },
     );
@@ -99,7 +99,7 @@ export default function ContactPage() {
           <SectionHeader title="تواصل معنا" subtitle="نحن هنا لخدمتك" align="center" />
         </Reveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 mt-6 sm:mt-10">
           <div className="lg:col-span-1 space-y-5">
             <Reveal>
               <InfoCard
@@ -181,8 +181,8 @@ export default function ContactPage() {
           <div className="lg:col-span-2 space-y-8">
             <Reveal>
               <Card className="lux-surface lux-outline rounded-3xl border shadow-sm">
-                <CardContent className="p-8 md:p-10">
-                  <h3 className="text-2xl font-serif font-bold mb-6">أرسل لنا رسالة</h3>
+                <CardContent className="p-5 sm:p-8 md:p-10">
+                  <h3 className="text-xl sm:text-2xl font-serif font-bold mb-4 sm:mb-6">أرسل لنا رسالة</h3>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">

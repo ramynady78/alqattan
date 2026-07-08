@@ -16,11 +16,11 @@ export type ResolvedContactLinks = {
 // Placeholders (edit here if real links are not available yet)
 export const CONTACT_PLACEHOLDERS = {
   phone: "+966500000000",
-  email: "info@alqattan.sa",
+  email: "info@example.com",
   whatsapp: "+966500000000",
-  instagram: "https://instagram.com/alqattan",
-  snapchat: "https://snapchat.com/add/alqattan",
-  facebook: "https://facebook.com/alqattan",
+  instagram: "https://instagram.com/",
+  snapchat: "https://snapchat.com/add/",
+  facebook: "https://facebook.com/",
 } as const;
 
 function normalizePhone(raw: string): string {

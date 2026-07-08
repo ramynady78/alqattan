@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDocumentTitle } from "@/lib/seo";
+import { SITE_NAME_AR } from "@/config/site";
 
 export default function LoginPage() {
   useDocumentTitle("تسجيل الدخول - لوحة الإدارة");
@@ -44,7 +45,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
         <CardHeader className="text-center pb-6">
           <CardTitle className="text-3xl font-serif font-bold text-primary mb-2">لوحة الإدارة</CardTitle>
-          <CardDescription>القطّان للستائر — تسجيل الدخول</CardDescription>
+          <CardDescription>{SITE_NAME_AR} — تسجيل الدخول</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">

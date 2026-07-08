@@ -1,66 +1,16 @@
-import { useMemo } from "react";
-import { useGetSettings, useListProducts } from "@workspace/api-client-react";
+import { useGetSettings } from "@workspace/api-client-react";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { useDocumentTitle } from "@/lib/seo";
 import { Reveal } from "@/components/motion/Reveal";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Award, BriefcaseBusiness, Package, Sparkles, Star, Users } from "lucide-react";
-
-type Testimonial = {
-  name: string;
-  city: string;
-  text: string;
-  rating: 5 | 4;
-};
-
-function Stars({ rating }: { rating: number }) {
-  return (
-    <div className="flex items-center gap-1 text-primary">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} className={`h-4 w-4 ${i < rating ? "fill-primary" : "fill-transparent"} `} />
-      ))}
-    </div>
-  );
-}
+import { Award, Sparkles } from "lucide-react";
+import { SITE_NAME_AR } from "@/config/site";
 
 export default function AboutPage() {
   const { data: settings } = useGetSettings();
-  const { data: products } = useListProducts({ page: 1, limit: 1 });
+  const yearsOfExperience = 10;
 
   useDocumentTitle("من نحن");
-
-  const stats = useMemo(() => {
-    const years = 10;
-    const completedProjects = 350;
-    const happyClients = 520;
-    const availableProducts = typeof products?.total === "number" ? products.total : 120;
-    return { years, completedProjects, happyClients, availableProducts };
-  }, [products?.total]);
-
-  const testimonials: Testimonial[] = useMemo(
-    () => [
-      {
-        name: "نورة العتيبي",
-        city: "الرياض",
-        rating: 5,
-        text: "الخامة راقية جداً والتنفيذ ممتاز. تعاملهم احترافي من القياس إلى التركيب، والنتيجة أجمل من المتوقع.",
-      },
-      {
-        name: "فهد الشهري",
-        city: "جدة",
-        rating: 5,
-        text: "تفصيل حسب الطلب بدقة، واهتمام بالتفاصيل في كل شيء. أنصح بهم لمن يبحث عن فخامة بدون تعقيد.",
-      },
-      {
-        name: "أم محمد",
-        city: "الخبر",
-        rating: 4,
-        text: "تجربة ممتازة بشكل عام، والستائر أعطت المكان فخامة واضحة. المواعيد كانت دقيقة والخدمة جميلة.",
-      },
-    ],
-    [],
-  );
 
   return (
     <div>
@@ -77,7 +27,7 @@ export default function AboutPage() {
                 <div className="flex flex-wrap items-center gap-2 mb-5">
                   <Badge variant="outline" className="rounded-full">
                     <Award className="ml-2 h-4 w-4 text-primary" />
-                    أكثر من {stats.years} سنوات من الخبرة
+                    أكثر من {yearsOfExperience} سنوات من الخبرة
                   </Badge>
                   <Badge variant="outline" className="rounded-full">
                     <Sparkles className="ml-2 h-4 w-4 text-primary" />
@@ -85,8 +35,8 @@ export default function AboutPage() {
                   </Badge>
                 </div>
 
-                <h2 className="text-3xl md:text-4xl font-serif font-bold leading-tight">
-                  القطّان للستائر… حيث تلتقي الفخامة بالأصالة
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold leading-tight">
+                  {SITE_NAME_AR}… حيث تلتقي الفخامة بالأصالة
                 </h2>
                 <p className="mt-4 text-muted-foreground leading-relaxed text-base md:text-lg">
                   نؤمن أن جمال المكان يبدأ من التفاصيل: خامة تُلامس الذوق، تصميم ينسجم مع الأثاث،
@@ -110,7 +60,7 @@ export default function AboutPage() {
               <div className="relative overflow-hidden rounded-3xl lux-outline h-full min-h-[360px] bg-muted">
                 <img
                   src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2000&q=80"
-                  alt="القطّان للستائر"
+                  alt={SITE_NAME_AR}
                   className="absolute inset-0 h-full w-full object-cover"
                   loading="lazy"
                 />
@@ -126,38 +76,6 @@ export default function AboutPage() {
                 </div>
               </div>
             </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="lux-section bg-muted/20">
-        <div className="lux-container">
-          <Reveal>
-            <SectionHeader title="أرقام نفتخر بها" subtitle="خبرة ونتائج" align="center" />
-          </Reveal>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              { icon: BriefcaseBusiness, label: "سنوات الخبرة", value: `${stats.years}+` },
-              { icon: Award, label: "مشاريع مُنجزة", value: `${stats.completedProjects}+` },
-              { icon: Users, label: "عملاء سعداء", value: `${stats.happyClients}+` },
-              { icon: Package, label: "منتجات متاحة", value: `${stats.availableProducts}+` },
-            ].map((s, idx) => (
-              <Reveal key={s.label} delay={0.03 + idx * 0.05}>
-                <Card className="rounded-3xl lux-surface lux-outline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="h-11 w-11 rounded-2xl bg-primary/10 border border-primary/10 flex items-center justify-center">
-                        <s.icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <div className="text-3xl font-serif font-bold text-foreground">{s.value}</div>
-                    </div>
-                    <div className="mt-3 text-sm text-muted-foreground">{s.label}</div>
-                  </CardContent>
-                </Card>
-              </Reveal>
-            ))}
           </div>
         </div>
       </section>
@@ -196,32 +114,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="lux-section bg-card border-t">
-        <div className="lux-container">
-          <Reveal>
-            <SectionHeader title="آراء عملائنا" subtitle="تجارب حقيقية" align="center" />
-          </Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t, idx) => (
-              <Reveal key={t.name} delay={0.03 + idx * 0.05}>
-                <div className="rounded-3xl lux-surface lux-outline p-7 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
-                  <Stars rating={t.rating} />
-                  <p className="mt-4 text-foreground/80 leading-relaxed">“{t.text}”</p>
-                  <div className="mt-6 flex items-center justify-between">
-                    <div>
-                      <div className="font-semibold">{t.name}</div>
-                      <div className="text-sm text-muted-foreground">{t.city}</div>
-                    </div>
-                    <div className="h-10 w-10 rounded-full bg-primary/10 border border-primary/10" />
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

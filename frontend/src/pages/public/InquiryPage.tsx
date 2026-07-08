@@ -51,12 +51,12 @@ export default function InquiryPage() {
       },
       {
         onSuccess: () => {
-          toast.success("تم إرسال استفسارك بنجاح");
+          toast.success("تم إرسال الطلب بنجاح");
           clear();
           navigate("/");
         },
         onError: () => {
-          toast.error("حدث خطأ أثناء الإرسال");
+          toast.error("حدث خطأ، حاول مرة أخرى");
         },
       },
     );

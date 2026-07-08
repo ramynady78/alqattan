@@ -87,7 +87,7 @@ export default function ProductDetailPage() {
   return (
     <div className="lux-section lux-noise">
       <div className="lux-container">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 md:gap-12 mb-10 sm:mb-16 items-start">
           <Reveal>
             <div className="space-y-4">
               <div className="aspect-square rounded-3xl overflow-hidden bg-muted border lux-outline">
@@ -126,14 +126,14 @@ export default function ProductDetailPage() {
           </Reveal>
 
           <Reveal delay={0.05}>
-            <div className="rounded-3xl lux-surface lux-outline p-7 md:p-8">
+            <div className="rounded-2xl sm:rounded-3xl lux-surface lux-outline p-5 sm:p-7 md:p-8">
               {product.categoryName && (
                 <Badge variant="outline" className="mb-4 text-sm font-medium tracking-wide">
                   {product.categoryName}
                 </Badge>
               )}
 
-              <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground mb-3 leading-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-serif font-bold text-foreground mb-3 leading-tight">
                 {product.name}
               </h1>
               {product.nameEn && (
@@ -189,9 +189,9 @@ export default function ProductDetailPage() {
             <Reveal>
               <SectionHeader title="منتجات مشابهة" align="center" />
             </Reveal>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="lux-product-grid">
               {related.map((p) => (
-                <Reveal key={p.id} delay={0.03}>
+                <Reveal key={p.id} delay={0.03} className="h-full">
                   <ProductCard product={p} />
                 </Reveal>
               ))}

@@ -1,5 +1,6 @@
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { SITE_NAME_AR, SITE_NAME_EN, SITE_TAGLINE } from "@/config/site";
 
 export function FullPageLoader({
   show,
@@ -51,11 +52,11 @@ export function FullPageLoader({
             <div className="p-7 md:p-8">
               <div className="flex items-start justify-between gap-6">
                 <div className="min-w-0">
-                  <div className={cn("text-2xl font-serif font-bold", variant === "public" ? "text-primary" : "text-foreground")}>
-                    {variant === "public" ? "القطّان" : "لوحة الإدارة"}
+                  <div className={cn("text-xl sm:text-2xl font-serif font-bold", variant === "public" ? "text-primary" : "text-foreground")}>
+                    {variant === "public" ? SITE_NAME_AR : "لوحة الإدارة"}
                   </div>
                   <div className="mt-1 text-sm text-muted-foreground">
-                    {variant === "public" ? "ستائر • أثاث • تنفيذ راقٍ" : "Al Qattan Admin"}
+                    {variant === "public" ? SITE_TAGLINE : `${SITE_NAME_EN} Admin`}
                   </div>
                 </div>
 

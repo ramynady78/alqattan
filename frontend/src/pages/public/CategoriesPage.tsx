@@ -30,9 +30,9 @@ export default function CategoriesPage() {
             onRetry={() => categoriesQuery.refetch()}
           />
         ) : list.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="lux-category-grid">
             {list.map((category) => (
-              <Reveal key={category.id} delay={0.03}>
+              <Reveal key={category.id} delay={0.03} className="h-full">
                 <CategoryCard category={category} />
               </Reveal>
             ))}

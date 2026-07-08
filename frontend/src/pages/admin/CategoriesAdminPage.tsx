@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import {
   AlertDialog,
@@ -118,11 +118,11 @@ export default function CategoriesAdminPage() {
         { id: editingId, data: formData },
         {
           onSuccess: () => {
-            toast.success("تم تحديث التصنيف");
+            toast.success("تم حفظ التعديلات بنجاح");
             invalidate();
             setIsFormOpen(false);
           },
-          onError: () => toast.error("تعذر تحديث التصنيف"),
+          onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
         },
       );
       return;
@@ -132,11 +132,11 @@ export default function CategoriesAdminPage() {
       { data: formData },
       {
         onSuccess: () => {
-          toast.success("تم إنشاء التصنيف");
+          toast.success("تمت إضافة التصنيف بنجاح");
           invalidate();
           setIsFormOpen(false);
         },
-        onError: () => toast.error("تعذر إنشاء التصنيف"),
+        onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
       },
     );
   };
@@ -147,11 +147,11 @@ export default function CategoriesAdminPage() {
       { id: deleteId },
       {
         onSuccess: () => {
-          toast.success("تم حذف التصنيف");
+          toast.success("تم حذف التصنيف بنجاح");
           invalidate();
           setDeleteId(null);
         },
-        onError: () => toast.error("تعذر حذف التصنيف"),
+        onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
       },
     );
   };
@@ -252,8 +252,12 @@ export default function CategoriesAdminPage() {
           <form onSubmit={handleSubmit} className="flex max-h-[90vh] flex-col">
             <div className="flex items-start justify-between gap-4 border-b bg-card/70 px-5 py-4 backdrop-blur">
               <div className="min-w-0">
-                <div className="text-lg font-semibold">{editingId ? "تعديل تصنيف" : "إضافة تصنيف"}</div>
-                <div className="mt-1 text-sm text-muted-foreground">النافذة لا تتجاوز ارتفاع الشاشة، مع تمرير داخلي.</div>
+                <DialogTitle className="text-lg font-semibold">
+                  {editingId ? "تعديل تصنيف" : "إضافة تصنيف"}
+                </DialogTitle>
+                <DialogDescription className="mt-1 text-sm text-muted-foreground">
+                  النافذة لا تتجاوز ارتفاع الشاشة، مع تمرير داخلي.
+                </DialogDescription>
               </div>
             </div>
 

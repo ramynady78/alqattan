@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -78,11 +78,11 @@ export default function InquiriesAdminPage() {
       { id, data: { status } },
       {
         onSuccess: () => {
-          toast.success("تم تحديث حالة الطلب");
+          toast.success("تم حفظ التعديلات بنجاح");
           invalidate();
           if (viewInquiry && viewInquiry.id === id) setViewInquiry({ ...viewInquiry, status });
         },
-        onError: () => toast.error("تعذر تحديث حالة الطلب"),
+        onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
       },
     );
   };
@@ -93,12 +93,12 @@ export default function InquiriesAdminPage() {
       { id: deleteId },
       {
         onSuccess: () => {
-          toast.success("تم حذف الطلب");
+          toast.success("تم حذف الطلب بنجاح");
           invalidate();
           setDeleteId(null);
           setViewInquiry(null);
         },
-        onError: () => toast.error("تعذر حذف الطلب"),
+        onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
       },
     );
   };
@@ -213,10 +213,12 @@ export default function InquiriesAdminPage() {
               <div className="border-b bg-card/70 px-5 py-4 backdrop-blur">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <div className="text-lg font-semibold">تفاصيل الطلب #{viewInquiry.id}</div>
-                    <div className="mt-1 text-sm text-muted-foreground">
+                    <DialogTitle className="text-lg font-semibold">
+                      تفاصيل الطلب #{viewInquiry.id}
+                    </DialogTitle>
+                    <DialogDescription className="mt-1 text-sm text-muted-foreground">
                       {new Date(viewInquiry.createdAt).toLocaleString("ar-SA")}
-                    </div>
+                    </DialogDescription>
                   </div>
                   <Badge variant={statusBadgeVariant(viewInquiry.status)}>
                     {STATUS_LABEL[viewInquiry.status] ?? viewInquiry.status}

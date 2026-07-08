@@ -1,0 +1,339 @@
+{
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "Admin login": {
+                "checks": {
+                    "login is 200": {
+                        "name": "login is 200",
+                        "path": "::Admin login::login is 200",
+                        "id": "1f871a63dbe126cff83814dd89834725",
+                        "passes": 1,
+                        "fails": 0
+                    },
+                    "login has admin id": {
+                        "fails": 0,
+                        "name": "login has admin id",
+                        "path": "::Admin login::login has admin id",
+                        "id": "ae8434fc5be2cd997a13f30e15b812b1",
+                        "passes": 1
+                    }
+                },
+                "name": "Admin login",
+                "path": "::Admin login",
+                "id": "100978c4330e94ac4130a41e315db743",
+                "groups": {}
+            },
+            "Category CRUD": {
+                "id": "19d1c65132ffded0de87beffe3b38539",
+                "groups": {},
+                "checks": {
+                        "create category is 201": {
+                            "name": "create category is 201",
+                            "path": "::Category CRUD::create category is 201",
+                            "id": "af59c1ed6db16b68417ed76a00eda5a6",
+                            "passes": 1,
+                            "fails": 0
+                        },
+                        "created category has id": {
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "created category has id",
+                            "path": "::Category CRUD::created category has id",
+                            "id": "488986a749346fc738a04592bf829a0b"
+                        },
+                        "update category is 200": {
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "update category is 200",
+                            "path": "::Category CRUD::update category is 200",
+                            "id": "be5e47f7fc9d968c7cd83a4516375f0b"
+                        },
+                        "updated category name changed": {
+                            "fails": 0,
+                            "name": "updated category name changed",
+                            "path": "::Category CRUD::updated category name changed",
+                            "id": "4efeec6a12a6d30ec034198f10690a79",
+                            "passes": 1
+                        }
+                    },
+                "name": "Category CRUD",
+                "path": "::Category CRUD"
+            },
+            "Product CRUD": {
+                "checks": {
+                    "create product is 201": {
+                        "fails": 0,
+                        "name": "create product is 201",
+                        "path": "::Product CRUD::create product is 201",
+                        "id": "093962d9700006a00903d95d834298a9",
+                        "passes": 1
+                    },
+                    "created product has id": {
+                        "name": "created product has id",
+                        "path": "::Product CRUD::created product has id",
+                        "id": "2b9f0f5b0957271385733e3fdf996ea7",
+                        "passes": 1,
+                        "fails": 0
+                    },
+                    "update product is 200": {
+                        "fails": 0,
+                        "name": "update product is 200",
+                        "path": "::Product CRUD::update product is 200",
+                        "id": "f803cd8836851d9d84cc746193ba5200",
+                        "passes": 1
+                    },
+                    "updated product price is 120": {
+                        "id": "75cdb8e9ab5d2973295c15bec88475ee",
+                        "passes": 1,
+                        "fails": 0,
+                        "name": "updated product price is 120",
+                        "path": "::Product CRUD::updated product price is 120"
+                    }
+                },
+                "name": "Product CRUD",
+                "path": "::Product CRUD",
+                "id": "140ac6212e9889dc14c084d7b1d8ed43",
+                "groups": {}
+            },
+            "Public inquiry + admin update": {
+                "id": "4bb9984f5ab05d7c4de5867fc8226c67",
+                "groups": {},
+                "checks": {
+                        "create inquiry is 201": {
+                            "id": "acb498f4e2cd853dd8d338e1338510c2",
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "create inquiry is 201",
+                            "path": "::Public inquiry + admin update::create inquiry is 201"
+                        },
+                        "created inquiry has id": {
+                            "name": "created inquiry has id",
+                            "path": "::Public inquiry + admin update::created inquiry has id",
+                            "id": "ee766af25962fbb0a48ee6214efcd8ed",
+                            "passes": 1,
+                            "fails": 0
+                        },
+                        "update inquiry is 200": {
+                            "id": "287177103480ddb4988def1fb48c5097",
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "update inquiry is 200",
+                            "path": "::Public inquiry + admin update::update inquiry is 200"
+                        },
+                        "inquiry status contacted": {
+                            "name": "inquiry status contacted",
+                            "path": "::Public inquiry + admin update::inquiry status contacted",
+                            "id": "fc3461e85a6588f3f80a76cfa32d409a",
+                            "passes": 1,
+                            "fails": 0
+                        }
+                    },
+                "name": "Public inquiry + admin update",
+                "path": "::Public inquiry + admin update"
+            },
+            "Gallery CRUD": {
+                "name": "Gallery CRUD",
+                "path": "::Gallery CRUD",
+                "id": "71faea4f1c03dbccbb40df3acb2f295e",
+                "groups": {},
+                "checks": {
+                        "create gallery is 201": {
+                            "id": "b1a8c7d5e15f8885ea3a7d949831552c",
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "create gallery is 201",
+                            "path": "::Gallery CRUD::create gallery is 201"
+                        },
+                        "created gallery has id": {
+                            "name": "created gallery has id",
+                            "path": "::Gallery CRUD::created gallery has id",
+                            "id": "57eae125455ff1d03d19ecaf7922cf6e",
+                            "passes": 1,
+                            "fails": 0
+                        },
+                        "update gallery is 200": {
+                            "name": "update gallery is 200",
+                            "path": "::Gallery CRUD::update gallery is 200",
+                            "id": "1d08c24d9a5b1183f36e23bcd17e067e",
+                            "passes": 1,
+                            "fails": 0
+                        },
+                        "updated gallery title changed": {
+                            "fails": 0,
+                            "name": "updated gallery title changed",
+                            "path": "::Gallery CRUD::updated gallery title changed",
+                            "id": "2f75dc21f54867dbefa60b9b3fb38cd8",
+                            "passes": 1
+                        }
+                    }
+            },
+            "Cleanup test data": {
+                "name": "Cleanup test data",
+                "path": "::Cleanup test data",
+                "id": "8449bcb88620d699ca0fb13702d9fd54",
+                "groups": {},
+                "checks": {
+                        "delete gallery is 204": {
+                            "name": "delete gallery is 204",
+                            "path": "::Cleanup test data::delete gallery is 204",
+                            "id": "ce04f5ba0150ed847a1e0954ae2047c2",
+                            "passes": 1,
+                            "fails": 0
+                        },
+                        "delete inquiry is 204": {
+                            "name": "delete inquiry is 204",
+                            "path": "::Cleanup test data::delete inquiry is 204",
+                            "id": "8bd553b108d0cd61d4f4901942e1cbb1",
+                            "passes": 1,
+                            "fails": 0
+                        },
+                        "delete product is 204": {
+                            "fails": 0,
+                            "name": "delete product is 204",
+                            "path": "::Cleanup test data::delete product is 204",
+                            "id": "fd5c08fb6258a6c48cbe824410daa0f6",
+                            "passes": 1
+                        },
+                        "delete category is 204": {
+                            "name": "delete category is 204",
+                            "path": "::Cleanup test data::delete category is 204",
+                            "id": "b4a1e10527a9c0aed99cbbb3136d90d9",
+                            "passes": 1,
+                            "fails": 0
+                        }
+                    }
+            }
+        },
+        "checks": {}
+    },
+    "metrics": {
+        "group_duration": {
+            "avg": 39.779783333333334,
+            "min": 5.8812,
+            "med": 15.44145,
+            "max": 165.6262,
+            "p(90)": 96.92415,
+            "p(95)": 131.27517500000002
+        },
+        "vus": {
+            "value": 1,
+            "min": 1,
+            "max": 1
+        },
+        "data_received": {
+            "count": 6329,
+            "rate": 5105.675956324003
+        },
+        "http_req_receiving": {
+            "avg": 0.43003076923076916,
+            "min": 0,
+            "med": 0,
+            "max": 1.7335,
+            "p(90)": 1.20656,
+            "p(95)": 1.4486199999999994
+        },
+        "http_req_sending": {
+            "med": 0,
+            "max": 0.5208,
+            "p(90)": 0.4051200000000003,
+            "p(95)": 0.51216,
+            "avg": 0.07901538461538463,
+            "min": 0
+        },
+        "checks": {
+            "fails": 0,
+            "passes": 22,
+            "thresholds": {
+                "rate>0.95": false
+            },
+            "value": 1
+        },
+        "http_reqs": {
+            "count": 13,
+            "rate": 10.487247184738829
+        },
+        "http_req_waiting": {
+            "med": 2.622,
+            "max": 121.4722,
+            "p(90)": 13.13312,
+            "p(95)": 56.476719999999844,
+            "avg": 14.12546153846154,
+            "min": 1.5196
+        },
+        "data_sent": {
+            "count": 4860,
+            "rate": 3920.6170244485156
+        },
+        "http_req_connecting": {
+            "avg": 0.040892307692307686,
+            "min": 0,
+            "med": 0,
+            "max": 0.5316,
+            "p(90)": 0,
+            "p(95)": 0.21263999999999922
+        },
+        "http_req_blocked": {
+            "med": 0,
+            "max": 25.5783,
+            "p(90)": 0,
+            "p(95)": 10.231319999999963,
+            "avg": 1.9675615384615384,
+            "min": 0
+        },
+        "iterations": {
+            "count": 1,
+            "rate": 0.8067113219029868
+        },
+        "iteration_duration": {
+            "avg": 1239.6008,
+            "min": 1239.6008,
+            "med": 1239.6008,
+            "max": 1239.6008,
+            "p(90)": 1239.6008,
+            "p(95)": 1239.6008
+        },
+        "http_req_duration": {
+            "min": 1.5196,
+            "med": 3.6594,
+            "max": 121.993,
+            "p(90)": 14.10024,
+            "p(95)": 57.40041999999984,
+            "avg": 14.634507692307693,
+            "thresholds": {
+                "p(95)<2000": false
+            }
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 13,
+            "thresholds": {
+                "rate<0.05": false
+            },
+            "value": 0
+        },
+        "http_req_duration{expected_response:true}": {
+            "min": 1.5196,
+            "med": 3.6594,
+            "max": 121.993,
+            "p(90)": 14.10024,
+            "p(95)": 57.40041999999984,
+            "avg": 14.634507692307693
+        },
+        "http_req_tls_handshaking": {
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0
+        },
+        "vus_max": {
+            "value": 1,
+            "min": 1,
+            "max": 1
+        }
+    }
+}

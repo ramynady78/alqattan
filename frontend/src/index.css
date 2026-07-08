@@ -123,8 +123,11 @@
   * {
     @apply border-border;
   }
+  html {
+    overflow-x: hidden;
+  }
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground overflow-x-hidden;
     direction: rtl;
     text-rendering: geometricPrecision;
   }
@@ -135,11 +138,11 @@
 
 @layer utilities {
   .lux-container {
-    @apply container mx-auto px-4;
+    @apply container mx-auto px-3 sm:px-4 max-w-7xl;
   }
 
   .lux-section {
-    @apply relative py-16 md:py-24;
+    @apply relative py-10 sm:py-14 md:py-20 lg:py-24;
   }
 
   .lux-surface {
@@ -183,6 +186,23 @@
     );
     background-size: 240% 100%;
     animation: lux-shimmer 1.35s ease-in-out infinite;
+  }
+
+  /* Product & category grids: 2 cols on mobile, no overflow */
+  .lux-product-grid {
+    @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 items-stretch;
+  }
+
+  .lux-product-grid > * {
+    @apply min-w-0 h-full;
+  }
+
+  .lux-category-grid {
+    @apply grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-8 items-stretch;
+  }
+
+  .lux-category-grid > * {
+    @apply min-w-0 h-full;
   }
 }
 

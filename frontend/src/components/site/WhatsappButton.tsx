@@ -14,7 +14,7 @@ export function WhatsappButton() {
       href={url} 
       target="_blank" 
       rel="noreferrer"
-      className="fixed bottom-6 left-6 z-50 flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg hover:scale-110 hover:shadow-xl transition-all duration-300"
+      className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-[#25D366] text-white rounded-full shadow-lg hover:scale-110 hover:shadow-xl transition-all duration-300"
       aria-label="تواصل عبر واتساب"
     >
       <MessageCircle className="h-7 w-7" />

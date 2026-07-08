@@ -5,6 +5,7 @@ import { CreateProductBody, UpdateProductBody } from "@workspace/api-zod";
 import { requireAdmin } from "../lib/auth";
 import { toIsoString } from "../lib/dates";
 import { withDbRetry } from "../lib/dbRetry";
+import { assertValidImageObjectPaths } from "../lib/imageUploads";
 
 const router: IRouter = Router();
 
@@ -199,6 +200,12 @@ router.post("/products", requireAdmin, async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  try {
+    await assertValidImageObjectPaths(parsed.data.images ?? []);
+  } catch (error) {
+    res.status(400).json({ message: error instanceof Error ? error.message : "Only image files are allowed" });
+    return;
+  }
   const [row] = await db
     .insert(productsTable)
     .values(inputToValues(parsed.data))
@@ -223,6 +230,12 @@ router.patch("/products/:id", requireAdmin, async (req, res): Promise<void> => {
   const parsed = UpdateProductBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  try {
+    await assertValidImageObjectPaths(parsed.data.images ?? []);
+  } catch (error) {
+    res.status(400).json({ message: error instanceof Error ? error.message : "Only image files are allowed" });
     return;
   }
   const [row] = await db

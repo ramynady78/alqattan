@@ -1,0 +1,208 @@
+{
+    "metrics": {
+        "vus_max": {
+            "value": 1,
+            "min": 1,
+            "max": 1
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 7,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "iterations": {
+            "count": 1,
+            "rate": 0.873376633017794
+        },
+        "http_req_sending": {
+            "avg": 0.07488571428571429,
+            "min": 0,
+            "med": 0,
+            "max": 0.5242,
+            "p(90)": 0.2096800000000002,
+            "p(95)": 0.3669399999999996
+        },
+        "checks": {
+            "passes": 9,
+            "fails": 0,
+            "thresholds": {
+                "rate>0.95": false
+            },
+            "value": 1
+        },
+        "group_duration": {
+            "avg": 144.8002,
+            "min": 144.8002,
+            "med": 144.8002,
+            "max": 144.8002,
+            "p(90)": 144.8002,
+            "p(95)": 144.8002
+        },
+        "http_req_connecting": {
+            "p(95)": 1.1833499999999988,
+            "avg": 0.2415,
+            "min": 0,
+            "med": 0,
+            "max": 1.6905,
+            "p(90)": 0.6762000000000006
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(90)": 36.45626000000002,
+            "p(95)": 58.68442999999994,
+            "avg": 15.53602857142857,
+            "min": 3.5515,
+            "med": 4.3641,
+            "max": 80.9126
+        },
+        "http_req_blocked": {
+            "med": 0,
+            "max": 33.2144,
+            "p(90)": 13.28576000000001,
+            "p(95)": 23.250079999999976,
+            "avg": 4.744914285714286,
+            "min": 0
+        },
+        "data_received": {
+            "count": 18549,
+            "rate": 16200.26316584706
+        },
+        "http_req_duration": {
+            "avg": 15.53602857142857,
+            "min": 3.5515,
+            "med": 4.3641,
+            "max": 80.9126,
+            "p(90)": 36.45626000000002,
+            "p(95)": 58.68442999999994,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "http_req_tls_handshaking": {
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0
+        },
+        "http_reqs": {
+            "count": 7,
+            "rate": 6.113636431124558
+        },
+        "http_req_waiting": {
+            "med": 4.3641,
+            "max": 80.4311,
+            "p(90)": 35.81546000000002,
+            "p(95)": 58.123279999999944,
+            "avg": 15.089214285714283,
+            "min": 2.5703
+        },
+        "http_req_receiving": {
+            "max": 0.9993,
+            "p(90)": 0.8479200000000001,
+            "p(95)": 0.9236099999999998,
+            "avg": 0.37192857142857144,
+            "min": 0,
+            "med": 0.3757
+        },
+        "vus": {
+            "value": 1,
+            "min": 1,
+            "max": 1
+        },
+        "data_sent": {
+            "count": 652,
+            "rate": 569.4415647276016
+        },
+        "iteration_duration": {
+            "avg": 1144.9814,
+            "min": 1144.9814,
+            "med": 1144.9814,
+            "max": 1144.9814,
+            "p(90)": 1144.9814,
+            "p(95)": 1144.9814
+        }
+    },
+    "root_group": {
+        "checks": {},
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+                "Public API smoke test": {
+                    "groups": {},
+                    "checks": {
+                            "healthz status is 200": {
+                                "name": "healthz status is 200",
+                                "path": "::Public API smoke test::healthz status is 200",
+                                "id": "2ed933e11382120e237095f3ca4746a2",
+                                "passes": 1,
+                                "fails": 0
+                            },
+                            "settings status is 200": {
+                                "name": "settings status is 200",
+                                "path": "::Public API smoke test::settings status is 200",
+                                "id": "223fec991e13a13b217c9a0053793948",
+                                "passes": 1,
+                                "fails": 0
+                            },
+                            "categories status is 200": {
+                                "path": "::Public API smoke test::categories status is 200",
+                                "id": "5b667c83c72a935884a35cc82aa9d0dd",
+                                "passes": 1,
+                                "fails": 0,
+                                "name": "categories status is 200"
+                            },
+                            "categories returns array": {
+                                "passes": 1,
+                                "fails": 0,
+                                "name": "categories returns array",
+                                "path": "::Public API smoke test::categories returns array",
+                                "id": "db4e491461df8a63761e2ff88e1d1d6e"
+                            },
+                            "products status is 200": {
+                                "passes": 1,
+                                "fails": 0,
+                                "name": "products status is 200",
+                                "path": "::Public API smoke test::products status is 200",
+                                "id": "428bdcb1068c5da5cdbb1f2c8765f83d"
+                            },
+                            "products has items array": {
+                                "name": "products has items array",
+                                "path": "::Public API smoke test::products has items array",
+                                "id": "d932934dcbf0c0812d3bfd68782916e6",
+                                "passes": 1,
+                                "fails": 0
+                            },
+                            "gallery status is 200": {
+                                "name": "gallery status is 200",
+                                "path": "::Public API smoke test::gallery status is 200",
+                                "id": "d6236edac430ee76ec5306e22bc27ce6",
+                                "passes": 1,
+                                "fails": 0
+                            },
+                            "product detail status is 200": {
+                                "name": "product detail status is 200",
+                                "path": "::Public API smoke test::product detail status is 200",
+                                "id": "0ec532e8a3cb1ff19545fea1f0011e2b",
+                                "passes": 1,
+                                "fails": 0
+                            },
+                            "related products status is 200": {
+                                "passes": 1,
+                                "fails": 0,
+                                "name": "related products status is 200",
+                                "path": "::Public API smoke test::related products status is 200",
+                                "id": "000b8c826d062e61d520aca0632b9fd6"
+                            }
+                        },
+                    "name": "Public API smoke test",
+                    "path": "::Public API smoke test",
+                    "id": "f638d4c0ebf13c858941ef263640b4c2"
+                }
+            }
+    }
+}

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useRequestUploadUrl } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
-import { Loader2, UploadCloud, X, GripVertical } from "lucide-react";
+import { Loader2, UploadCloud, X } from "lucide-react";
 import { toast } from "sonner";
 import { toImageUrl } from "@/lib/imageUrl";
+import { validateImageFile } from "@/lib/uploadValidation";
 
 interface MultiImageUploaderProps {
   value: string[];
@@ -17,6 +18,13 @@ export function MultiImageUploader({ value = [], onChange }: MultiImageUploaderP
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
+
+    const invalidFile = files.find((file) => validateImageFile(file));
+    if (invalidFile) {
+      toast.error(validateImageFile(invalidFile) ?? "يسمح فقط برفع ملفات الصور");
+      e.target.value = "";
+      return;
+    }
 
     setIsUploading(true);
     const newPaths: string[] = [];
@@ -42,7 +50,6 @@ export function MultiImageUploader({ value = [], onChange }: MultiImageUploaderP
       }
       
       onChange([...value, ...newPaths]);
-      toast.success("تم رفع الصور بنجاح");
     } catch (error) {
       console.error(error);
       toast.error("فشل رفع بعض أو كل الصور");

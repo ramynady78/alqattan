@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { SITE_NAME_AR, SITE_TAGLINE } from "@/config/site";
 
 export type HeroSlide = {
   id: string;
@@ -34,7 +35,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
         id: "signature",
         imageUrl:
           "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2400&q=80",
-        heading: "القطّان للستائر",
+        heading: SITE_NAME_AR,
         subheading: "تفاصيل فاخرة تُصمَّم لتُكمل ذوق منزلك وتُبرز هويته.",
         primaryCta: { label: "تصفح المنتجات", href: "/products" },
       },
@@ -89,7 +90,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
       onMouseLeave={() => setIsPaused(false)}
       aria-label="Hero"
     >
-      <div className="relative min-h-[78vh] md:min-h-[86vh] lux-noise">
+      <div className="relative min-h-[68vh] sm:min-h-[78vh] md:min-h-[86vh] lux-noise">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
             key={slide.id}
@@ -109,7 +110,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
         </AnimatePresence>
 
         <div className="relative z-10 lux-container">
-          <div className="mx-auto flex min-h-[78vh] md:min-h-[86vh] max-w-5xl flex-col items-center justify-center text-center pt-20 md:pt-24">
+          <div className="mx-auto flex min-h-[68vh] sm:min-h-[78vh] md:min-h-[86vh] max-w-5xl flex-col items-center justify-center text-center pt-16 sm:pt-20 md:pt-24 px-2">
             <motion.div
               key={`${slide.id}-content`}
               initial="hidden"
@@ -138,7 +139,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                 <span className="text-xs md:text-sm tracking-wide">
-                  ستائر • أثاث • تنجيد • تنفيذ راقٍ
+                  {SITE_TAGLINE}
                 </span>
               </motion.div>
 
@@ -148,7 +149,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
                   show: reduce ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 },
                 }}
                 transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-                className="text-balance text-4xl md:text-6xl lg:text-7xl font-serif font-bold leading-[1.05] text-white drop-shadow-[0_18px_60px_rgba(0,0,0,0.55)]"
+                className="text-balance text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-serif font-bold leading-[1.08] text-white drop-shadow-[0_18px_60px_rgba(0,0,0,0.55)]"
               >
                 {slide.heading}
               </motion.h1>
@@ -159,7 +160,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
                   show: reduce ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 },
                 }}
                 transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-                className="mx-auto mt-5 max-w-2xl text-pretty text-base md:text-xl text-white/90 leading-relaxed"
+                className="mx-auto mt-4 sm:mt-5 max-w-2xl text-pretty text-sm sm:text-base md:text-xl text-white/90 leading-relaxed"
               >
                 {slide.subheading}
               </motion.p>
@@ -173,7 +174,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
                 className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3"
               >
                 <Link to={slide.primaryCta.href}>
-                  <Button size="lg" className="h-14 px-9 text-base md:text-lg rounded-full shadow-sm">
+                  <Button size="lg" className="h-12 sm:h-14 px-7 sm:px-9 text-sm sm:text-base md:text-lg rounded-full shadow-sm w-full sm:w-auto">
                     {slide.primaryCta.label}
                     <ArrowLeft className="mr-2 h-5 w-5" />
                   </Button>

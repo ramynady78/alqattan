@@ -59,7 +59,7 @@ export default function SettingsAdminPage() {
           toast.success("تم حفظ الإعدادات بنجاح");
           queryClient.invalidateQueries({ queryKey: getGetSettingsQueryKey() });
         },
-        onError: () => toast.error("فشل حفظ الإعدادات"),
+        onError: () => toast.error("حدث خطأ، حاول مرة أخرى"),
       },
     );
   };

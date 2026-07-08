@@ -101,23 +101,23 @@ export default function ProductsPage() {
         </Reveal>
 
         <Reveal>
-          <div className="flex flex-col md:flex-row gap-4 mb-10 items-stretch md:items-center justify-between rounded-3xl lux-surface lux-outline p-4 md:p-5">
-            <form onSubmit={handleSearch} className="flex w-full md:w-auto relative">
-              <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-
-              <Input
-                placeholder="ابحث عن منتج…"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="pl-4 pr-10 md:w-96 rounded-full"
-              />
-
-              <Button type="submit" variant="secondary" className="mr-2 rounded-full">
+          <div className="flex flex-col gap-3 sm:gap-4 mb-8 sm:mb-10 rounded-2xl sm:rounded-3xl lux-surface lux-outline p-3 sm:p-4 md:p-5">
+            <form onSubmit={handleSearch} className="flex flex-col sm:flex-row w-full gap-2 sm:gap-0 sm:relative">
+              <div className="relative flex-1">
+                <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="ابحث عن منتج…"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="pl-4 pr-10 w-full md:w-96 rounded-full"
+                />
+              </div>
+              <Button type="submit" variant="secondary" className="sm:mr-2 rounded-full w-full sm:w-auto">
                 بحث
               </Button>
             </form>
 
-            <div className="w-full md:w-72">
+            <div className="w-full md:w-72 md:mr-auto">
               <Select
                 value={categoryIdParam || "all"}
                 onValueChange={handleCategoryChange}
@@ -151,9 +151,9 @@ export default function ProductsPage() {
           />
         ) : productsData?.items && productsData.items.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="lux-product-grid">
               {productsData.items.map((product) => (
-                <Reveal key={product.id} delay={0.03}>
+                <Reveal key={product.id} delay={0.03} className="h-full">
                   <ProductCard product={product} />
                 </Reveal>
               ))}

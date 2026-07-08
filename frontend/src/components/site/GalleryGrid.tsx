@@ -1,42 +1,51 @@
+import { useState } from "react";
 import { GalleryItem } from "@workspace/api-client-react";
 import { toImageUrl } from "@/lib/imageUrl";
 import { ImagePlaceholder } from "./ImagePlaceholder";
+
+function GalleryGridCard({ item }: { item: GalleryItem }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const imageSrc = item.imageUrl ? toImageUrl(item.imageUrl) : "";
+  const showImage = Boolean(item.imageUrl && imageSrc && !imageFailed);
+
+  return (
+    <article className="group relative overflow-hidden rounded-3xl lux-surface lux-outline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+      <div className="aspect-[4/3] overflow-hidden bg-muted">
+        {showImage ? (
+          <img
+            src={imageSrc}
+            alt={item.title}
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+            loading="lazy"
+            onError={() => setImageFailed(true)}
+          />
+        ) : (
+          <ImagePlaceholder />
+        )}
+      </div>
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-90" />
+      <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_35%_30%,rgba(184,150,90,0.35),transparent_55%)]" />
+
+      <div className="absolute inset-0 flex flex-col items-start justify-end p-4 text-right opacity-100 sm:p-6 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100">
+        <h3 className="line-clamp-2 text-lg font-bold text-white sm:text-xl">{item.title}</h3>
+        {item.description && (
+          <p className="mt-1 line-clamp-2 max-w-[95%] text-sm leading-relaxed text-white/85">
+            {item.description}
+          </p>
+        )}
+      </div>
+    </article>
+  );
+}
 
 export function GalleryGrid({ items }: { items: GalleryItem[] }) {
   if (!items?.length) return null;
 
   return (
-    <div className="columns-1 md:columns-2 lg:columns-3 gap-5 space-y-5">
+    <div className="grid grid-cols-1 gap-4 overflow-x-hidden sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
       {items.map((item) => (
-        <div
-          key={item.id}
-          className="group relative overflow-hidden rounded-3xl break-inside-avoid lux-surface lux-outline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
-        >
-          {item.imageUrl ? (
-            <img
-              src={toImageUrl(item.imageUrl)}
-              alt={item.title}
-              className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-              loading="lazy"
-            />
-          ) : (
-            <div className="aspect-square">
-              <ImagePlaceholder />
-            </div>
-          )}
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-90" />
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_35%_30%,rgba(184,150,90,0.35),transparent_55%)]" />
-
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-start justify-end p-6 text-right">
-            <h3 className="text-white font-serif text-xl font-bold mb-1">{item.title}</h3>
-            {item.description && (
-              <p className="text-white/85 text-sm leading-relaxed line-clamp-2 max-w-[95%]">
-                {item.description}
-              </p>
-            )}
-          </div>
-        </div>
+        <GalleryGridCard key={item.id} item={item} />
       ))}
     </div>
   );

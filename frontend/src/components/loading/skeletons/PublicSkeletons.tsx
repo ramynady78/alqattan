@@ -17,15 +17,11 @@ function CardShell({ className, children }: { className?: string; children?: Rea
 
 export function ProductCardSkeleton() {
   return (
-    <CardShell>
-      <Skeleton className="h-[260px] sm:h-[280px] lg:h-[300px] rounded-none" />
-      <div className="p-5 space-y-3">
-        <Skeleton className="h-5 w-3/4 rounded-full" />
-        <Skeleton className="h-4 w-1/2 rounded-full" />
-        <div className="flex items-center gap-2 pt-2">
-          <Skeleton className="h-10 flex-1 rounded-full" />
-          <Skeleton className="h-10 w-12 rounded-full" />
-        </div>
+    <CardShell className="h-full flex flex-col">
+      <Skeleton className="aspect-[4/5] w-full rounded-none shrink-0" />
+      <div className="p-2.5 sm:p-5 space-y-2 flex-1">
+        <Skeleton className="h-4 w-3/4 rounded-full" />
+        <Skeleton className="h-3.5 w-1/2 rounded-full" />
       </div>
     </CardShell>
   );
@@ -33,7 +29,7 @@ export function ProductCardSkeleton() {
 
 export function ProductGridSkeleton({ count = 8 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="lux-product-grid">
       {Array.from({ length: count }).map((_, i) => (
         <ProductCardSkeleton key={i} />
       ))}
@@ -43,11 +39,11 @@ export function ProductGridSkeleton({ count = 8 }: { count?: number }) {
 
 export function CategoryCardSkeleton() {
   return (
-    <CardShell>
-      <Skeleton className="aspect-square rounded-none" />
-      <div className="p-6 space-y-3">
-        <Skeleton className="h-6 w-2/3 rounded-full" />
-        <Skeleton className="h-4 w-4/5 rounded-full" />
+    <CardShell className="relative h-full">
+      <Skeleton className="aspect-square w-full rounded-none" />
+      <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 md:p-6 space-y-2">
+        <Skeleton className="h-4 sm:h-5 w-2/3 rounded-full" />
+        <Skeleton className="h-3 w-4/5 rounded-full hidden sm:block" />
       </div>
     </CardShell>
   );
@@ -55,7 +51,7 @@ export function CategoryCardSkeleton() {
 
 export function CategoryGridSkeleton({ count = 6 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="lux-category-grid">
       {Array.from({ length: count }).map((_, i) => (
         <CategoryCardSkeleton key={i} />
       ))}

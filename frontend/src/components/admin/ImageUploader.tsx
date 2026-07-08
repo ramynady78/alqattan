@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, UploadCloud, X } from "lucide-react";
 import { toast } from "sonner";
 import { toImageUrl } from "@/lib/imageUrl";
+import { validateImageFile } from "@/lib/uploadValidation";
 
 interface ImageUploaderProps {
   value: string | null;
@@ -18,6 +19,13 @@ export function ImageUploader({ value, onChange, className = "" }: ImageUploader
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      toast.error(validationError);
+      e.target.value = "";
+      return;
+    }
 
     setIsUploading(true);
     try {
@@ -39,9 +47,7 @@ export function ImageUploader({ value, onChange, className = "" }: ImageUploader
 
       if (!res.ok) throw new Error("Upload failed");
 
-      // 3. Save path
       onChange(objectPath);
-      toast.success("تم رفع الصورة بنجاح");
     } catch (error) {
       console.error(error);
       toast.error("فشل رفع الصورة");

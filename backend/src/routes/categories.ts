@@ -5,6 +5,7 @@ import { CreateCategoryBody, UpdateCategoryBody } from "@workspace/api-zod";
 import { requireAdmin } from "../lib/auth";
 import { toIsoString } from "../lib/dates";
 import { withDbRetry } from "../lib/dbRetry";
+import { assertValidImageObjectPath } from "../lib/imageUploads";
 
 const router: IRouter = Router();
 
@@ -65,6 +66,12 @@ router.post("/categories", requireAdmin, async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  try {
+    await assertValidImageObjectPath(parsed.data.imageUrl ?? null);
+  } catch (error) {
+    res.status(400).json({ message: error instanceof Error ? error.message : "Only image files are allowed" });
+    return;
+  }
   const [row] = await db
     .insert(categoriesTable)
     .values({
@@ -88,6 +95,12 @@ router.patch("/categories/:id", requireAdmin, async (req, res): Promise<void> =>
   const parsed = UpdateCategoryBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  try {
+    await assertValidImageObjectPath(parsed.data.imageUrl ?? null);
+  } catch (error) {
+    res.status(400).json({ message: error instanceof Error ? error.message : "Only image files are allowed" });
     return;
   }
   const [row] = await db

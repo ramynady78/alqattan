@@ -17,6 +17,7 @@ import {
 } from "@/components/loading/skeletons/PublicSkeletons";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { SITE_NAME_AR } from "@/config/site";
 
 export default function HomePage() {
   const settingsQuery = useGetSettings();
@@ -39,7 +40,7 @@ export default function HomePage() {
       id: "signature",
       imageUrl:
         "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2400&q=80",
-      heading: settings?.heroTitle || "القطّان للستائر",
+      heading: settings?.heroTitle || SITE_NAME_AR,
       subheading: settings?.heroSubtitle || "أناقة تليق بمنزلك… وفخامة تُصمَّم لتدوم.",
       primaryCta: { label: "تصفح المنتجات", href: "/products" },
     },
@@ -72,7 +73,7 @@ export default function HomePage() {
           </Reveal>
 
           {categoriesQuery.isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="lux-category-grid">
               {[1, 2, 3].map((i) => (
                 <CategoryCardSkeleton key={i} />
               ))}
@@ -85,9 +86,9 @@ export default function HomePage() {
             />
           ) : featuredCategories.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="lux-category-grid">
                 {featuredCategories.map((cat, idx) => (
-                  <Reveal key={cat.id} delay={0.03 + idx * 0.05}>
+                  <Reveal key={cat.id} delay={0.03 + idx * 0.05} className="h-full">
                     <CategoryCard category={cat} />
                   </Reveal>
                 ))}
@@ -122,9 +123,9 @@ export default function HomePage() {
             />
           ) : products?.items && products.items.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="lux-product-grid">
                 {products.items.map((product, idx) => (
-                  <Reveal key={product.id} delay={0.02 + idx * 0.04}>
+                  <Reveal key={product.id} delay={0.02 + idx * 0.04} className="h-full">
                     <ProductCard product={product} />
                   </Reveal>
                 ))}
@@ -151,14 +152,14 @@ export default function HomePage() {
         <div className="lux-container relative">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-5">لماذا القطّان؟</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold mb-4 sm:mb-5">لماذا {SITE_NAME_AR}؟</h2>
               <p className="text-primary-foreground/85 leading-relaxed">
                 نُقدّم تجربة راقية من البداية حتى النهاية… لأن الفخامة ليست مظهراً فقط، بل جودةٌ وخدمةٌ واهتمامٌ بالتفاصيل.
               </p>
             </div>
           </Reveal>
 
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="mt-8 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
             {[
               {
                 title: "جودة عالية",
@@ -192,13 +193,13 @@ export default function HomePage() {
               },
             ].map((f, idx) => (
               <Reveal key={f.title} delay={0.03 + idx * 0.05}>
-                <div className="group relative overflow-hidden rounded-3xl border border-white/15 bg-white/10 backdrop-blur px-6 py-7 text-right transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_60px_rgba(0,0,0,0.18)]">
+                <div className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/15 bg-white/10 backdrop-blur px-4 py-5 sm:px-6 sm:py-7 text-right transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_60px_rgba(0,0,0,0.18)]">
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.18),transparent_55%)]" />
                   <div className="relative">
                     <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-white/10">
                       <f.Icon className="h-5 w-5 text-white/80 transition-colors duration-300 group-hover:text-primary" />
                     </div>
-                    <h3 className="text-xl font-bold font-serif mb-2">{f.title}</h3>
+                    <h3 className="text-lg sm:text-xl font-bold font-serif mb-2">{f.title}</h3>
                     <p className="text-primary-foreground/85 leading-relaxed">{f.text}</p>
                   </div>
                 </div>
@@ -248,7 +249,7 @@ export default function HomePage() {
       <section className="lux-section bg-card border-t border-b">
         <div className="lux-container text-center">
           <Reveal>
-            <h2 className="text-3xl font-serif font-bold mb-6">هل تبحث عن تصميم مخصص؟</h2>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4 sm:mb-6">هل تبحث عن تصميم مخصص؟</h2>
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed">
               فريقنا جاهز لتلبية طلباتك وتصميم الستائر التي تناسب مساحتك بدقة واحترافية.
             </p>

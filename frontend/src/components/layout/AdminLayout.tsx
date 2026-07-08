@@ -18,8 +18,9 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { SITE_NAME_AR } from "@/config/site";
 
 const navItems = [
   { href: "/admin", label: "لوحة التحكم", icon: LayoutDashboard },
@@ -102,7 +103,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             <span className="font-serif font-bold text-primary text-xl leading-none">
               لوحة الإدارة
             </span>
-            <span className="text-xs text-muted-foreground mt-1">إدارة الموقع</span>
+            <span className="text-xs text-muted-foreground mt-1">{SITE_NAME_AR}</span>
           </div>
         </div>
 
@@ -123,7 +124,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
 
       {/* Content area */}
       <div className="lg:pr-72">
-        <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-30 border-b border-border/80 bg-background shadow-sm supports-[backdrop-filter]:bg-background">
           <div className="flex h-16 items-center justify-between gap-3 px-4 md:px-6">
             <div className="flex min-w-0 items-center gap-3">
               <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -133,12 +134,16 @@ export function AdminLayout({ children }: { children: ReactNode }) {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-80 p-0" dir="rtl">
+                  <SheetHeader className="sr-only">
+                    <SheetTitle>قائمة لوحة الإدارة</SheetTitle>
+                    <SheetDescription>تنقل بين أقسام لوحة الإدارة من قائمة الجوال.</SheetDescription>
+                  </SheetHeader>
                   <div className="flex h-16 items-center px-4 border-b">
                     <div className="flex flex-col">
                       <span className="font-serif font-bold text-primary text-xl leading-none">
                         لوحة الإدارة
                       </span>
-                      <span className="text-xs text-muted-foreground mt-1">إدارة الموقع</span>
+                      <span className="text-xs text-muted-foreground mt-1">{SITE_NAME_AR}</span>
                     </div>
                   </div>
 

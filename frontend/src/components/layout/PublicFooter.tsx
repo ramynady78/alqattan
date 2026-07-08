@@ -4,6 +4,7 @@ import { MapPin, Mail, Phone } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaSnapchat, FaWhatsapp } from "react-icons/fa6";
 import { Reveal } from "@/components/motion/Reveal";
 import { resolveContactLinks } from "@/config/contactLinks";
+import { SITE_NAME_AR, SITE_NAME_EN } from "@/config/site";
 
 export function PublicFooter() {
   const { data: settings } = useGetSettings();
@@ -11,15 +12,23 @@ export function PublicFooter() {
 
   return (
     <footer className="mt-auto border-t bg-card/60 backdrop-blur supports-[backdrop-filter]:bg-card/50">
-      <div className="lux-container py-14">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+      <div className="lux-container py-10 sm:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10">
           <div className="md:col-span-5 space-y-5">
             <Reveal>
-              <div>
-                <div className="text-sm tracking-wide text-muted-foreground">Al Qattan</div>
-                <h3 className="text-2xl font-serif font-bold text-primary leading-tight">
-                  القطّان للستائر
-                </h3>
+              <div className="flex items-center gap-3">
+                <img
+                  src="/logo-curtain.png"
+                  alt={SITE_NAME_AR}
+                  className="h-12 w-12 md:h-14 md:w-14 object-contain mix-blend-multiply shrink-0"
+                  loading="lazy"
+                />
+                <div>
+                  <div className="text-sm tracking-wide text-muted-foreground">{SITE_NAME_EN}</div>
+                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-primary leading-tight">
+                    {SITE_NAME_AR}
+                  </h3>
+                </div>
               </div>
               <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-md">
                 {settings?.brandTagline || "الفخامة والأناقة في كل تفصيلة."}
@@ -110,7 +119,7 @@ export function PublicFooter() {
         </div>
 
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} القطّان للستائر. جميع الحقوق محفوظة.</p>
+          <p>© {new Date().getFullYear()} {SITE_NAME_AR}. جميع الحقوق محفوظة.</p>
         </div>
       </div>
     </footer>

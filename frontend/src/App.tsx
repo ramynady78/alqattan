@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect } from "react";
@@ -105,10 +105,11 @@ function AnimatedRouter() {
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={key}
-        initial={reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-        animate={reduce ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
-        exit={reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: -6 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        className="min-w-0 w-full"
+        initial={reduce ? { opacity: 1 } : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={reduce ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       >
         <AppRoutes />
       </motion.div>
