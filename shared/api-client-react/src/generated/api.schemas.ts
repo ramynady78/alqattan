@@ -184,6 +184,8 @@ export interface Settings {
   instagram: string;
   snapchat: string;
   twitter: string;
+  /** Optional for backward compatibility with older API responses. */
+  tiktokUrl?: string;
   brandTagline: string;
   heroTitle: string;
   heroSubtitle: string;
@@ -199,6 +201,7 @@ export interface SettingsInput {
   instagram?: string;
   snapchat?: string;
   twitter?: string;
+  tiktokUrl?: string;
   brandTagline?: string;
   heroTitle?: string;
   heroSubtitle?: string;

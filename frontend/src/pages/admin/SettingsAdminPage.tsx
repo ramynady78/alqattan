@@ -30,6 +30,7 @@ export default function SettingsAdminPage() {
     instagram: "",
     snapchat: "",
     twitter: "",
+    tiktokUrl: "",
   });
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export default function SettingsAdminPage() {
       instagram: settings.instagram || "",
       snapchat: settings.snapchat || "",
       twitter: settings.twitter || "",
+      tiktokUrl: settings.tiktokUrl || "",
     });
   }, [settings]);
 
@@ -180,11 +182,21 @@ export default function SettingsAdminPage() {
                 <Input id="snapchat" name="snapchat" value={formData.snapchat || ""} onChange={handleChange} dir="ltr" className="text-right" placeholder="https://snapchat.com/..." />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="tiktokUrl">رابط تيك توك</Label>
+                <Input
+                  id="tiktokUrl"
+                  name="tiktokUrl"
+                  value={formData.tiktokUrl || ""}
+                  onChange={handleChange}
+                  dir="ltr"
+                  className="text-right"
+                  placeholder="https://www.tiktok.com/@..."
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="twitter">X / تويتر</Label>
                 <Input id="twitter" name="twitter" value={formData.twitter || ""} onChange={handleChange} dir="ltr" className="text-right" placeholder="https://x.com/..." />
               </div>
-
-             
             </CardContent>
           </Card>
         </div>

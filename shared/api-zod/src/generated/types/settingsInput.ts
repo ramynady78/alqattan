@@ -15,6 +15,7 @@ export interface SettingsInput {
   instagram?: string;
   snapchat?: string;
   twitter?: string;
+  tiktokUrl?: string;
   brandTagline?: string;
   heroTitle?: string;
   heroSubtitle?: string;

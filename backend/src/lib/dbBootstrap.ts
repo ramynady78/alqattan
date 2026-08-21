@@ -129,6 +129,7 @@ export async function bootstrapDatabase(): Promise<void> {
         instagram text not null default '',
         snapchat text not null default '',
         twitter text not null default '',
+        tiktok_url text not null default '',
         brand_tagline text not null default '',
         hero_title text not null default '',
         hero_subtitle text not null default '',
@@ -137,6 +138,7 @@ export async function bootstrapDatabase(): Promise<void> {
     `);
 
     await pool.query(`
+      alter table site_settings add column if not exists tiktok_url text not null default '';
       alter table gallery_items add column if not exists slug varchar(255);
       alter table gallery_items add column if not exists images text[] not null default '{}'::text[];
     `);

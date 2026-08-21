@@ -19,6 +19,7 @@ function serialize(s: SettingsRow) {
     instagram: s.instagram,
     snapchat: s.snapchat,
     twitter: s.twitter,
+    tiktokUrl: s.tiktokUrl ?? "",
     brandTagline: s.brandTagline,
     heroTitle: s.heroTitle,
     heroSubtitle: s.heroSubtitle,
@@ -79,6 +80,8 @@ router.patch("/settings", requireAdmin, async (req, res): Promise<void> => {
       instagram: parsed.data.instagram ?? current.instagram,
       snapchat: parsed.data.snapchat ?? current.snapchat,
       twitter: parsed.data.twitter ?? current.twitter,
+      tiktokUrl:
+        parsed.data.tiktokUrl !== undefined ? parsed.data.tiktokUrl : current.tiktokUrl,
       brandTagline: parsed.data.brandTagline ?? current.brandTagline,
       heroTitle: parsed.data.heroTitle ?? current.heroTitle,
       heroSubtitle: parsed.data.heroSubtitle ?? current.heroSubtitle,

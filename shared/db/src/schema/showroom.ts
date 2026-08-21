@@ -85,6 +85,7 @@ export const settingsTable = pgTable("site_settings", {
   instagram: text("instagram").notNull().default(""),
   snapchat: text("snapchat").notNull().default(""),
   twitter: text("twitter").notNull().default(""),
+  tiktokUrl: text("tiktok_url").notNull().default(""),
   brandTagline: text("brand_tagline").notNull().default(""),
   heroTitle: text("hero_title").notNull().default(""),
   heroSubtitle: text("hero_subtitle").notNull().default(""),

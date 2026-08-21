@@ -1,6 +1,6 @@
 import type { Settings } from "@workspace/api-client-react";
 
-export type SocialKey = "instagram" | "snapchat" | "facebook" | "whatsapp";
+export type SocialKey = "instagram" | "snapchat" | "facebook" | "tiktok" | "whatsapp";
 
 export type ResolvedContactLinks = {
   phone: { label: string; value: string; href: string };
@@ -50,6 +50,23 @@ export function resolveContactLinks(settings?: Settings | null): ResolvedContact
   const instagram = settings?.instagram || CONTACT_PLACEHOLDERS.instagram;
   const snapchat = settings?.snapchat || CONTACT_PLACEHOLDERS.snapchat;
   const facebook = CONTACT_PLACEHOLDERS.facebook;
+  const tiktokUrl = (settings?.tiktokUrl || "").trim();
+
+  const socials: ResolvedContactLinks["socials"] = [
+    { key: "instagram", label: "Instagram", href: instagram },
+    { key: "snapchat", label: "Snapchat", href: snapchat },
+    { key: "facebook", label: "Facebook", href: facebook },
+  ];
+
+  if (tiktokUrl) {
+    socials.push({ key: "tiktok", label: "TikTok", href: tiktokUrl });
+  }
+
+  socials.push({
+    key: "whatsapp",
+    label: "WhatsApp",
+    href: buildWhatsAppChatUrl(whatsappValue),
+  });
 
   return {
     phone: { label: "الهاتف", value: phoneValue, href: `tel:${phoneValue}` },
@@ -59,12 +76,6 @@ export function resolveContactLinks(settings?: Settings | null): ResolvedContact
       value: whatsappValue,
       href: buildWhatsAppChatUrl(whatsappValue, "مرحباً، أود الاستفسار من خلال موقعكم الإلكتروني."),
     },
-    socials: [
-      { key: "instagram", label: "Instagram", href: instagram },
-      { key: "snapchat", label: "Snapchat", href: snapchat },
-      { key: "facebook", label: "Facebook", href: facebook },
-      { key: "whatsapp", label: "WhatsApp", href: buildWhatsAppChatUrl(whatsappValue) },
-    ],
+    socials,
   };
 }
-

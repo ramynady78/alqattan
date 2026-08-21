@@ -11,8 +11,9 @@ import { useDocumentTitle } from "@/lib/seo";
 import { toast } from "sonner";
 import { Reveal } from "@/components/motion/Reveal";
 import { resolveContactLinks } from "@/config/contactLinks";
-import { FaFacebookF, FaInstagram, FaSnapchat, FaWhatsapp } from "react-icons/fa6";
+import { FaWhatsapp } from "react-icons/fa6";
 import { PublicPageHero } from "@/components/site/PublicPageHero";
+import { SocialLinksRow } from "@/components/site/SocialLinksRow";
 
 export default function ContactPage() {
   useDocumentTitle("تواصل معنا");
@@ -149,36 +150,12 @@ export default function ContactPage() {
                 <Card className="lux-surface lux-outline rounded-3xl">
                   <CardContent className="p-6">
                     <h4 className="font-bold mb-3">تابعنا</h4>
-                    <div className="flex items-center gap-2">
-                      {links.socials.map((s) => {
-                        const Icon =
-                          s.key === "instagram"
-                            ? FaInstagram
-                            : s.key === "snapchat"
-                              ? FaSnapchat
-                              : s.key === "facebook"
-                                ? FaFacebookF
-                                : FaWhatsapp;
-                        return (
-                          <a
-                            key={s.key}
-                            href={s.href}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-full border bg-background/40 hover:bg-muted transition-all hover:-translate-y-0.5 hover:shadow-sm"
-                            aria-label={s.label}
-                            title={s.label}
-                          >
-                            <Icon className="h-4 w-4" />
-                          </a>
-                        );
-                      })}
-                    </div>
+                    <SocialLinksRow socials={links.socials} />
                     <div className="mt-4">
                       <a
                         href={links.whatsapp.href}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
                       >
                         <FaWhatsapp className="h-4 w-4" />

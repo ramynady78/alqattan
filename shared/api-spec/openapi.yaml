@@ -619,6 +619,7 @@ components:
         instagram: { type: string }
         snapchat: { type: string }
         twitter: { type: string }
+        tiktokUrl: { type: string }
         brandTagline: { type: string }
         heroTitle: { type: string }
         heroSubtitle: { type: string }
@@ -635,6 +636,7 @@ components:
         instagram: { type: string }
         snapchat: { type: string }
         twitter: { type: string }
+        tiktokUrl: { type: string }
         brandTagline: { type: string }
         heroTitle: { type: string }
         heroSubtitle: { type: string }

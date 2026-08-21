@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useGetSettings } from "@workspace/api-client-react";
 import { MapPin, Mail, Phone } from "lucide-react";
-import { FaFacebookF, FaInstagram, FaSnapchat, FaWhatsapp } from "react-icons/fa6";
 import { Reveal } from "@/components/motion/Reveal";
 import { resolveContactLinks } from "@/config/contactLinks";
+import { SocialLinksRow } from "@/components/site/SocialLinksRow";
 import { SITE_NAME_AR } from "@/config/site";
 
 export function PublicFooter() {
@@ -88,30 +88,8 @@ export function PublicFooter() {
                 )}
               </ul>
 
-              <div className="pt-3 flex items-center gap-2">
-                {links.socials.map((s) => {
-                  const Icon =
-                    s.key === "instagram"
-                      ? FaInstagram
-                      : s.key === "snapchat"
-                        ? FaSnapchat
-                        : s.key === "facebook"
-                          ? FaFacebookF
-                          : FaWhatsapp;
-                  return (
-                    <a
-                      key={s.key}
-                      href={s.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border bg-background/40 hover:bg-muted transition-all hover:-translate-y-0.5 hover:shadow-sm"
-                      aria-label={s.label}
-                      title={s.label}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </a>
-                  );
-                })}
+              <div className="pt-3">
+                <SocialLinksRow socials={links.socials} />
               </div>
             </Reveal>
           </div>
