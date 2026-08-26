@@ -7,6 +7,7 @@ import router from "./routes";
 import { logger } from "./lib/logger";
 import { buildSessionMiddleware } from "./lib/auth";
 import { isTransientDbError } from "./lib/dbRetry";
+import { mountSeoRoutes, mountSpaSeoFallback } from "./seo/http";
 
 const app: Express = express();
 
@@ -63,6 +64,7 @@ app.use(buildSessionMiddleware());
 app.use("/api/static", express.static(path.resolve(process.cwd(), "public")));
 
 app.use("/api", router);
+mountSeoRoutes(app);
 
 const nodeEnv = process.env["NODE_ENV"] ?? "development";
 
@@ -77,19 +79,7 @@ if (nodeEnv === "production") {
     }),
   );
 
-  app.use((req, res, next) => {
-    if (req.path.startsWith("/api")) return next();
-
-    if (req.method !== "GET" && req.method !== "HEAD") return next();
-    if (req.path.includes(".")) return next();
-
-    if (req.method === "GET") {
-      const accept = req.headers.accept ?? "";
-      if (!accept.includes("text/html")) return next();
-    }
-
-    res.sendFile(indexHtmlPath);
-  });
+  mountSpaSeoFallback(app, indexHtmlPath);
 }
 
 app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {

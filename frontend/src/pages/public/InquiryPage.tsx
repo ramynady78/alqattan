@@ -11,12 +11,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Trash2, Plus, Minus, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { buildWhatsAppUrl, formatInquiryMessage } from "@/lib/whatsapp";
-import { useDocumentTitle } from "@/lib/seo";
 import { Reveal } from "@/components/motion/Reveal";
 import { PublicPageHero } from "@/components/site/PublicPageHero";
+import { staticPageSeo } from "@/seo/pages";
+import { usePageSeo } from "@/seo/usePageSeo";
+import { STATIC_SEO } from "@/seo/content";
 
 export default function InquiryPage() {
-  useDocumentTitle("سلة الاستفسارات");
+  usePageSeo(staticPageSeo("inquiry"));
   const { items, updateQty, removeItem, clear } = useCart();
   const createInquiry = useCreateInquiry();
   const { data: settings } = useGetSettings();
@@ -85,13 +87,13 @@ export default function InquiryPage() {
       <div className="lux-section lux-noise">
         <div className="lux-container min-h-[60vh] flex flex-col items-center justify-center text-center">
           <Reveal>
-            <h2 className="text-3xl font-serif mb-4">سلة الاستفسارات فارغة</h2>
+            <h1 className="text-3xl font-serif mb-4">{STATIC_SEO.inquiry.h1}</h1>
             <p className="text-muted-foreground mb-8 max-w-xl leading-relaxed">
-              قم بتصفح المنتجات وإضافة ما ترغب للاستفسار عنه.
+              تصفحوا المنتجات وأضيفوا ما ترغبون بالاستفسار عنه، ثم تواصلوا معنا لطلب ستائركم.
             </p>
             <Link to="/products">
               <Button size="lg" className="rounded-full px-10">
-                تصفح المنتجات
+                اختاروا من تصاميمنا
               </Button>
             </Link>
           </Reveal>
@@ -103,8 +105,8 @@ export default function InquiryPage() {
   return (
     <div>
       <PublicPageHero
-        title="سلة الاستفسارات"
-        subtitle="راجع المنتجات التي اخترتها وأرسل طلبك مباشرة عبر الموقع أو واتساب."
+        title={STATIC_SEO.inquiry.h1}
+        subtitle="راجعوا المنتجات اللي اخترتموها وأرسلوا طلبكم مباشرة عبر الموقع أو واتساب."
         breadcrumbs={[
           { label: "الرئيسية", href: "/" },
           { label: "سلة الاستفسارات" },

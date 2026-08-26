@@ -1,25 +1,30 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { formatPageTitle, SITE_DESCRIPTION } from "@/config/site";
 
 export function useDocumentTitle(title: string, description?: string) {
+  const { pathname } = useLocation();
+
   useEffect(() => {
     document.title = formatPageTitle(title);
-    if (description) {
-      const meta = document.querySelector('meta[name="description"]');
-      if (meta) {
-        meta.setAttribute("content", description);
-      } else {
-        const newMeta = document.createElement("meta");
-        newMeta.name = "description";
-        newMeta.content = description;
-        document.head.appendChild(newMeta);
-      }
-    } else {
-      const meta = document.querySelector('meta[name="description"]');
-      if (meta) {
-        meta.setAttribute("content", SITE_DESCRIPTION);
-      }
+    const content = description || SITE_DESCRIPTION;
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "description");
+      document.head.appendChild(meta);
     }
-  }, [title, description]);
+    meta.setAttribute("content", content);
+
+    if (pathname.startsWith("/admin")) {
+      let robots = document.querySelector('meta[name="robots"]');
+      if (!robots) {
+        robots = document.createElement("meta");
+        robots.setAttribute("name", "robots");
+        document.head.appendChild(robots);
+      }
+      robots.setAttribute("content", "noindex, nofollow");
+    }
+  }, [title, description, pathname]);
 }
 

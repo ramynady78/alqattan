@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export function EmptyState({
   title = "لا توجد بيانات",
-  description = "لا توجد عناصر لعرضها حالياً.",
+  description = "لا توجد عناصر لعرضها حاليا.",
   icon,
   actionLabel,
   onAction,
@@ -19,6 +19,7 @@ export function EmptyState({
 }) {
   return (
     <div
+      role="status"
       className={cn(
         "rounded-3xl border text-center p-10 md:p-12",
         variant === "public" ? "lux-surface lux-outline" : "bg-card",
@@ -29,7 +30,7 @@ export function EmptyState({
           {icon}
         </div>
       ) : null}
-      <h3 className="text-xl font-serif font-bold">{title}</h3>
+      <p className="text-xl font-serif font-bold">{title}</p>
       <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{description}</p>
       {actionLabel && onAction ? (
         <div className="mt-6">

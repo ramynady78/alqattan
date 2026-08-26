@@ -19,6 +19,7 @@ export function ErrorState({
 }) {
   return (
     <div
+      role="status"
       className={cn(
         "rounded-3xl border text-center p-10 md:p-12",
         variant === "public" ? "lux-surface lux-outline" : "bg-card",
@@ -29,7 +30,7 @@ export function ErrorState({
           {icon}
         </div>
       ) : null}
-      <h3 className="text-xl font-serif font-bold">{title}</h3>
+      <p className="text-xl font-serif font-bold">{title}</p>
       <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{description}</p>
       {onRetry ? (
         <div className="mt-6">

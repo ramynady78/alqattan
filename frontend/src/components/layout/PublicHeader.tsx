@@ -19,7 +19,7 @@ export function PublicHeader() {
     { href: "/products", label: "المنتجات" },
     { href: "/gallery", label: "أعمالنا" },
     { href: "/about", label: "من نحن" },
-    { href: "/contact", label: "تواصل معنا" },
+    { href: "/contact", label: "تواصلوا معنا" },
   ];
 
   return (
@@ -41,7 +41,7 @@ export function PublicHeader() {
                 <div className="flex items-center gap-3">
                   <img
                     src="/logo-curtain.png"
-                    alt={SITE_NAME_AR}
+                    alt=""
                     className="h-9 w-9 object-contain mix-blend-multiply"
                     loading="eager"
                   />
@@ -67,7 +67,7 @@ export function PublicHeader() {
 
               <div className="mt-6 grid gap-2">
                 <Link to="/contact" onClick={() => setMobileOpen(false)}>
-                  <Button className="w-full rounded-full">اطلب استشارة</Button>
+                  <Button className="w-full rounded-full">اطلبوا استشارة</Button>
                 </Link>
                 <Link to="/inquiry" onClick={() => setMobileOpen(false)}>
                   <Button variant="outline" className="w-full rounded-full">
@@ -82,7 +82,7 @@ export function PublicHeader() {
             <span className="cursor-pointer select-none flex items-center gap-3 min-w-0">
               <img
                 src="/logo-curtain.png"
-                alt={SITE_NAME_AR}
+                alt=""
                 className="h-9 w-9 md:h-11 md:w-11 object-contain mix-blend-multiply shrink-0"
                 loading="eager"
               />
@@ -122,9 +122,9 @@ export function PublicHeader() {
 
         <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 shrink-0">
           <Link to="/contact">
-            <Button variant="outline" className="hidden md:inline-flex rounded-full">
+              <Button variant="outline" className="hidden md:inline-flex rounded-full">
               <PhoneCall className="ml-2 h-4 w-4" />
-              اطلب استشارة
+              اطلبوا استشارة
             </Button>
           </Link>
           <Link to="/inquiry">

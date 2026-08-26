@@ -6,20 +6,27 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { useDocumentTitle } from "@/lib/seo";
+import { MapPin, Phone, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Reveal } from "@/components/motion/Reveal";
-import { resolveContactLinks } from "@/config/contactLinks";
+import { isDisplayableEmail, isDisplayablePhone, resolveContactLinks } from "@/config/contactLinks";
 import { FaWhatsapp } from "react-icons/fa6";
 import { PublicPageHero } from "@/components/site/PublicPageHero";
 import { SocialLinksRow } from "@/components/site/SocialLinksRow";
+import { staticPageSeo } from "@/seo/pages";
+import { usePageSeo } from "@/seo/usePageSeo";
+import { STATIC_SEO } from "@/seo/content";
 
 export default function ContactPage() {
-  useDocumentTitle("تواصل معنا");
+  usePageSeo(staticPageSeo("contact"));
   const { data: settings } = useGetSettings();
   const createInquiry = useCreateInquiry();
   const links = resolveContactLinks(settings ?? null);
+  const showPhone = isDisplayablePhone(links.phone.value);
+  const showEmail = isDisplayableEmail(links.email.value);
+  const showWhatsapp = isDisplayablePhone(links.whatsapp.value);
+  const showAddress = Boolean(settings?.address?.trim());
+  const hasContactMethods = showPhone || showEmail || showWhatsapp || showAddress || links.socials.length > 0;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -46,7 +53,7 @@ export default function ContactPage() {
           setFormData({ name: "", phone: "", email: "", message: "" });
         },
         onError: () => {
-          toast.error("حدث خطأ، حاول مرة أخرى");
+          toast.error("حدث خطأ، حاولوا مرة أخرى");
         },
       },
     );
@@ -75,7 +82,7 @@ export default function ContactPage() {
           {icon}
         </div>
         <div className="min-w-0">
-          <h4 className="font-bold mb-1">{title}</h4>
+          <p className="font-bold mb-1">{title}</p>
           {href ? (
             <a
               href={href}
@@ -97,11 +104,11 @@ export default function ContactPage() {
   return (
     <div>
       <PublicPageHero
-        title="تواصل معنا"
-        subtitle="نحن هنا لمساعدتك في اختيار القماش، القياسات، والتفصيل الأنسب لمساحتك."
+        title={STATIC_SEO.contact.h1}
+        subtitle="شاركونا احتياجكم والمساحة اللي تبغون تكملونها، ونساعدكم تختارون التصميم والتفاصيل المناسبة."
         breadcrumbs={[
           { label: "الرئيسية", href: "/" },
-          { label: "تواصل معنا" },
+          { label: "تواصلوا معنا" },
         ]}
         backgroundImage="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=2200&q=80"
       />
@@ -109,69 +116,15 @@ export default function ContactPage() {
       <div className="lux-section lux-noise">
         <div className="lux-container max-w-6xl">
           <Reveal>
-            <SectionHeader title="تواصل معنا" subtitle="نحن هنا لخدمتك" align="center" />
+            <SectionHeader title="أرسلوا طلبكم" subtitle="نبدأ من الفكرة" align="center" />
           </Reveal>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 mt-6 sm:mt-10">
-            <div className="lg:col-span-1 space-y-5">
-              <Reveal>
-                <InfoCard
-                  icon={<Phone className="h-6 w-6 text-primary" />}
-                  title="الهاتف"
-                  value={links.phone.value}
-                  dir="ltr"
-                  href={links.phone.href}
-                />
-              </Reveal>
-              <Reveal delay={0.05}>
-                <InfoCard
-                  icon={<Mail className="h-6 w-6 text-primary" />}
-                  title="البريد الإلكتروني"
-                  value={links.email.value}
-                  href={links.email.href}
-                />
-              </Reveal>
-              <Reveal delay={0.1}>
-                <InfoCard
-                  icon={<MapPin className="h-6 w-6 text-primary" />}
-                  title="العنوان"
-                  value={settings?.address || "غير متوفر"}
-                />
-              </Reveal>
-              <Reveal delay={0.15}>
-                <InfoCard
-                  icon={<Clock className="h-6 w-6 text-primary" />}
-                  title="ساعات العمل"
-                  value={"السبت - الخميس\n9:00 ص - 10:00 م"}
-                />
-              </Reveal>
-
-              <Reveal delay={0.2}>
-                <Card className="lux-surface lux-outline rounded-3xl">
-                  <CardContent className="p-6">
-                    <h4 className="font-bold mb-3">تابعنا</h4>
-                    <SocialLinksRow socials={links.socials} />
-                    <div className="mt-4">
-                      <a
-                        href={links.whatsapp.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-                      >
-                        <FaWhatsapp className="h-4 w-4" />
-                        فتح محادثة واتساب مباشرة
-                      </a>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Reveal>
-            </div>
-
-            <div className="lg:col-span-2 space-y-8">
+            <div className="order-1 lg:order-2 lg:col-span-2 space-y-8">
               <Reveal>
                 <Card className="lux-surface lux-outline rounded-3xl border shadow-sm">
                   <CardContent className="p-5 sm:p-8 md:p-10">
-                    <h3 className="text-xl sm:text-2xl font-serif font-bold mb-4 sm:mb-6">أرسل لنا رسالة</h3>
+                    <p className="text-xl sm:text-2xl font-serif font-bold mb-4 sm:mb-6">بيانات الطلب</p>
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
@@ -216,7 +169,7 @@ export default function ContactPage() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="message">
-                          رسالتك <span className="text-destructive">*</span>
+                          رسالتكم <span className="text-destructive">*</span>
                         </Label>
                         <Textarea
                           id="message"
@@ -236,7 +189,7 @@ export default function ContactPage() {
                 </Card>
               </Reveal>
 
-              {settings?.mapEmbedUrl && (
+              {settings?.mapEmbedUrl ? (
                 <Reveal>
                   <div className="rounded-3xl overflow-hidden border lux-outline h-80 bg-muted">
                     <iframe
@@ -251,11 +204,81 @@ export default function ContactPage() {
                     />
                   </div>
                 </Reveal>
-              )}
+              ) : null}
             </div>
+
+            {hasContactMethods ? (
+              <div className="order-2 lg:order-1 lg:col-span-1 space-y-5">
+                {showPhone ? (
+                  <Reveal>
+                    <InfoCard
+                      icon={<Phone className="h-6 w-6 text-primary" />}
+                      title="الهاتف"
+                      value={links.phone.value}
+                      dir="ltr"
+                      href={links.phone.href}
+                    />
+                  </Reveal>
+                ) : null}
+                {showEmail ? (
+                  <Reveal delay={0.05}>
+                    <InfoCard
+                      icon={<Mail className="h-6 w-6 text-primary" />}
+                      title="البريد الإلكتروني"
+                      value={links.email.value}
+                      href={links.email.href}
+                    />
+                  </Reveal>
+                ) : null}
+                {showAddress ? (
+                  <Reveal delay={0.1}>
+                    <InfoCard
+                      icon={<MapPin className="h-6 w-6 text-primary" />}
+                      title="العنوان"
+                      value={settings?.address || ""}
+                    />
+                  </Reveal>
+                ) : null}
+                {showWhatsapp || links.socials.length > 0 ? (
+                  <Reveal delay={0.15}>
+                    <Card className="lux-surface lux-outline rounded-3xl">
+                      <CardContent className="p-6">
+                        <p className="font-bold mb-3">قنوات التواصل</p>
+                        {links.socials.length > 0 ? <SocialLinksRow socials={links.socials} /> : null}
+                        {showWhatsapp ? (
+                          <div className="mt-4">
+                            <a
+                              href={links.whatsapp.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                            >
+                              <FaWhatsapp className="h-4 w-4" />
+                              فتح محادثة واتساب
+                            </a>
+                          </div>
+                        ) : null}
+                      </CardContent>
+                    </Card>
+                  </Reveal>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
+
+      <section className="lux-section bg-muted/20">
+        <div className="lux-container max-w-3xl text-center">
+          <Reveal>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4">كيف نقدر نساعدكم؟</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              نساعدكم في اختيار التصميم، مناقشة التفاصيل المناسبة لمساحتكم، وترتيب خطوات الطلب والتنفيذ بوضوح. أرسلوا
+              احتياجكم من النموذج، ونكمل معكم من هناك.
+            </p>
+          </Reveal>
+        </div>
+      </section>
     </div>
   );
 }

@@ -32,7 +32,7 @@ function GalleryGridCard({ item }: { item: GalleryItem }) {
           {showImage ? (
             <img
               src={imageSrc}
-              alt={item.title}
+              alt={item.title?.trim() ? item.title : "ستائر عصرية من أعمالنا"}
               className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               loading="lazy"
               onError={() => setImageFailed(true)}

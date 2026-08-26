@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams, Link } from "react-router-dom";
 import {
   useListProducts,
   useListCategories,
@@ -16,13 +16,16 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, ChevronLeft, Search } from "lucide-react";
-import { useDocumentTitle } from "@/lib/seo";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductGridSkeleton } from "@/components/loading/skeletons/PublicSkeletons";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { PublicPageHero } from "@/components/site/PublicPageHero";
 import { buildCategoryUrl } from "@/lib/routes";
+import { categoryPageSeo, staticPageSeo } from "@/seo/pages";
+import { usePageSeo } from "@/seo/usePageSeo";
+import { STATIC_SEO, buildCategoryIntro } from "@/seo/content";
+import { SectionHeader } from "@/components/site/SectionHeader";
 
 export default function ProductsPage() {
   const navigate = useNavigate();
@@ -62,7 +65,14 @@ export default function ProductsPage() {
   });
   const { data: productsData, isLoading, isError } = productsQuery;
 
-  useDocumentTitle(selectedCategory ? selectedCategory.name : "المنتجات");
+  const pageSeo = selectedCategory
+    ? categoryPageSeo(selectedCategory)
+    : slug
+      ? categoryBySlugQuery.isError || (!categoryBySlugQuery.isLoading && !selectedCategory)
+        ? { ...staticPageSeo("notFound"), path: `/categories/${slug}` }
+        : { ...staticPageSeo("categories"), path: `/categories/${slug}` }
+      : staticPageSeo("products");
+  usePageSeo(pageSeo);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -118,10 +128,22 @@ export default function ProductsPage() {
     ...(selectedCategory ? [{ label: selectedCategory.name }] : []),
   ];
 
-  const heroTitle = selectedCategory ? selectedCategory.name : "المنتجات";
+  const categoryUnavailable = Boolean(slug) && !categoryBySlugQuery.isLoading && !selectedCategory;
+
+  const heroTitle = selectedCategory
+    ? selectedCategory.name
+    : categoryUnavailable
+      ? STATIC_SEO.notFound.h1
+      : slug
+        ? STATIC_SEO.categories.h1
+        : STATIC_SEO.products.h1;
   const heroSubtitle = selectedCategory
-    ? selectedCategory.description || "تشكيلة أنيقة من الستائر والخامات المختارة بعناية لهذه الفئة."
-    : "تصفح المجموعة الكاملة واستخدم البحث والفلترة للوصول سريعًا إلى ما يناسب ذوقك.";
+    ? buildCategoryIntro(selectedCategory.name, selectedCategory.description)
+    : categoryUnavailable
+      ? "تعذر العثور على التصنيف المطلوب. تصفحوا التصنيفات أو تواصلوا معنا للمساعدة."
+      : slug
+        ? "اكتشفوا تصاميم هذا التصنيف واختاروا اللي يناسب مساحتكم."
+        : "تصفحوا التشكيلة واختاروا التصميم اللي يناسب ذوقكم ومساحتكم.";
 
   return (
     <div>
@@ -134,6 +156,17 @@ export default function ProductsPage() {
 
       <div className="lux-section lux-noise">
         <div className="lux-container">
+          {!selectedCategory ? (
+            <Reveal>
+              <p className="mx-auto mb-8 max-w-3xl text-center text-muted-foreground leading-relaxed">
+                اختاروا من تصاميم الستائر العصرية ما يناسب مساحتكم. إذا احتجتم مساعدة في الاختيار،{" "}
+                <Link to="/contact" className="text-primary hover:underline">
+                  تواصلوا معنا
+                </Link>{" "}
+                ونساعدكم تصلون للخيار الأنسب.
+              </p>
+            </Reveal>
+          ) : null}
           <Reveal>
             <div className="mb-8 sm:mb-10 rounded-[1.75rem] border border-border/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(248,244,238,0.96))] p-4 shadow-[0_18px_50px_rgba(42,31,23,0.06)] ring-1 ring-black/5 backdrop-blur sm:rounded-[2rem] sm:p-5 md:p-6">
               <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -172,6 +205,10 @@ export default function ProductsPage() {
                 </div>
               </div>
             </div>
+          </Reveal>
+
+          <Reveal>
+            <SectionHeader title="تصفحوا منتجاتنا" subtitle="التشكيلة" align="center" />
           </Reveal>
 
           {slug && categoryBySlugQuery.isLoading ? (
@@ -231,13 +268,29 @@ export default function ProductsPage() {
           ) : (
             <EmptyState
               title="لا توجد منتجات مطابقة"
-              description="جرّب تعديل عبارة البحث أو تغيير التصنيف للحصول على نتائج أخرى."
+              description="جربوا تعديل عبارة البحث أو تغيير التصنيف للحصول على نتائج أخرى."
               actionLabel="إعادة ضبط الفلاتر"
               onAction={resetFilters}
             />
           )}
         </div>
       </div>
+
+      <section className="lux-section bg-card border-t">
+        <div className="lux-container max-w-3xl text-center">
+          <Reveal>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4">اختاروا التصميم المناسب لمساحتكم</h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              تحتاجون مساعدة في الاختيار؟ تواصلوا معنا ونساعدكم تختارون الأنسب لمساحتكم.
+            </p>
+            <Link to="/contact">
+              <Button size="lg" className="rounded-full px-8">
+                تواصلوا معنا
+              </Button>
+            </Link>
+          </Reveal>
+        </div>
+      </section>
     </div>
   );
 }

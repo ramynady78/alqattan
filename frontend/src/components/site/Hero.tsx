@@ -17,6 +17,7 @@ export type HeroSlide = {
 
 type HeroProps = {
   slides?: HeroSlide[];
+  heading?: string;
   className?: string;
   autoplayMs?: number;
 };
@@ -26,7 +27,7 @@ function clampIndex(n: number, len: number): number {
   return ((n % len) + len) % len;
 }
 
-export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
+export function Hero({ slides, heading, className, autoplayMs = 5000 }: HeroProps) {
   const reduce = useReducedMotion();
 
   const fallbackSlides: HeroSlide[] = useMemo(
@@ -36,16 +37,16 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
         imageUrl:
           "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2400&q=80",
         heading: SITE_NAME_AR,
-        subheading: "تفاصيل فاخرة تُصمَّم لتُكمل ذوق منزلك وتُبرز هويته.",
-        primaryCta: { label: "تصفح المنتجات", href: "/products" },
+        subheading: "تفاصيل فاخرة تصمم بعناية لتكمل ذوق منازلكم.",
+        primaryCta: { label: "اختاروا من تصاميمنا", href: "/products" },
       },
       {
         id: "craft",
         imageUrl:
           "https://images.unsplash.com/photo-1544984243-ec57ea16fe25?auto=format&fit=crop&w=2400&q=80",
-        heading: "أناقة تُحاك بعناية",
-        subheading: "أقمشة مختارة وتشطيب راقٍ… لأن الفخامة تبدأ من الملمس.",
-        primaryCta: { label: "اكتشف التصنيفات", href: "/categories" },
+        heading: "أناقة تحاك بعناية",
+        subheading: "أقمشة مختارة وتشطيب راق، لأن الفخامة تبدأ من الملمس.",
+        primaryCta: { label: "اكتشفوا التصنيفات", href: "/categories" },
       },
       {
         id: "bespoke",
@@ -53,7 +54,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
           "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=2400&q=80",
         heading: "تصميم حسب الطلب",
         subheading: "قياس، اقتراحات، وتنفيذ… تجربة سلسة من أول فكرة حتى التركيب.",
-        primaryCta: { label: "اطلب استشارة", href: "/contact" },
+        primaryCta: { label: "تواصلوا معنا للطلب", href: "/contact" },
       },
     ],
     [],
@@ -83,7 +84,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
   return (
     <section
       className={cn("relative overflow-hidden", className)}
-      aria-label="Hero"
+      aria-label="القسم الرئيسي"
     >
       <div className="relative min-h-[68vh] sm:min-h-[78vh] md:min-h-[86vh] lux-noise">
         <AnimatePresence mode="popLayout" initial={false}>
@@ -146,7 +147,7 @@ export function Hero({ slides, className, autoplayMs = 5000 }: HeroProps) {
                 transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
                 className="text-balance text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-serif font-bold leading-[1.08] text-white drop-shadow-[0_18px_60px_rgba(0,0,0,0.55)]"
               >
-                {slide.heading}
+                {heading || slide.heading}
               </motion.h1>
 
               <motion.p

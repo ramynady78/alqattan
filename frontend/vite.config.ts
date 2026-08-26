@@ -112,6 +112,14 @@ export default defineConfig(async ({ mode }) => {
           target: resolveBackendProxyTarget(),
           changeOrigin: true,
         },
+        "/sitemap.xml": {
+          target: resolveBackendProxyTarget(),
+          changeOrigin: true,
+        },
+        "/robots.txt": {
+          target: resolveBackendProxyTarget(),
+          changeOrigin: true,
+        },
       },
       fs: {
         strict: true,

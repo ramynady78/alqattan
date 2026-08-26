@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useListGallery } from "@workspace/api-client-react";
 import { Reveal } from "@/components/motion/Reveal";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
 import { toImageUrl } from "@/lib/imageUrl";
-import { useDocumentTitle } from "@/lib/seo";
+import { galleryItemPageSeo, staticPageSeo } from "@/seo/pages";
+import { usePageSeo } from "@/seo/usePageSeo";
 
 function getGallerySlugLike(entry: {
   id: number;
@@ -56,7 +57,19 @@ export default function GalleryDetailPage() {
     setActiveIndex(0);
   }, [slug]);
 
-  useDocumentTitle(item?.title || "تفاصيل العمل");
+  usePageSeo(
+    isLoading
+      ? { ...staticPageSeo("gallery"), path: slug ? `/gallery/${slug}` : "/gallery" }
+      : item
+        ? galleryItemPageSeo({
+            title: item.title,
+            slug: (item as typeof item & { slug?: string | null }).slug || slug,
+            description: item.description,
+            imageUrl: item.imageUrl,
+            images: (item as typeof item & { images?: string[] }).images,
+          })
+        : { ...staticPageSeo("notFound"), path: slug ? `/gallery/${slug}` : "/gallery" },
+  );
 
   if (isLoading) {
     return (
@@ -79,7 +92,7 @@ export default function GalleryDetailPage() {
       <div className="lux-section lux-noise">
         <div className="lux-container text-center py-20">
           <Reveal>
-            <h2 className="text-2xl font-serif mb-4">العنصر غير موجود</h2>
+            <h1 className="text-2xl font-serif mb-4">العنصر غير موجود</h1>
             <p className="text-muted-foreground mb-8">تعذر العثور على العمل المطلوب داخل المعرض.</p>
             <Button variant="outline" className="rounded-full px-8" onClick={() => window.history.back()}>
               العودة
@@ -93,6 +106,19 @@ export default function GalleryDetailPage() {
   return (
     <div className="lux-section lux-noise">
       <div className="lux-container">
+        <nav className="mb-6 text-sm text-muted-foreground" aria-label="مسار التنقل">
+          <ol className="flex flex-wrap items-center gap-2">
+            <li>
+              <Link to="/" className="hover:text-primary">الرئيسية</Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li>
+              <Link to="/gallery" className="hover:text-primary">أعمالنا</Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li className="text-foreground font-medium">{item.title}</li>
+          </ol>
+        </nav>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-10 items-start">
           <Reveal>
             <div className="space-y-4">
@@ -124,7 +150,7 @@ export default function GalleryDetailPage() {
                         }`}
                         aria-label={`صورة ${index + 1}`}
                       >
-                        <img src={toImageUrl(image)} alt="" className="h-full w-full object-cover" />
+                        <img src={toImageUrl(image)} alt={`${item.title} — صورة ${index + 1}`} className="h-full w-full object-cover" />
                       </button>
                     );
                   })}
@@ -147,9 +173,14 @@ export default function GalleryDetailPage() {
                 </p>
               ) : (
                 <p className="mt-5 text-base leading-8 text-muted-foreground">
-                  لا يوجد وصف إضافي لهذا العمل حالياً.
+                  لقطة من أعمال الستائر العصرية بتفاصيل مرتبة وتنفيذ يناسب طابع المساحة. تواصلوا معنا لتصميم يناسب ذوقكم.
                 </p>
               )}
+              <div className="mt-8">
+                <Link to="/contact">
+                  <Button className="rounded-full px-8">تواصلوا معنا للطلب</Button>
+                </Link>
+              </div>
             </div>
           </Reveal>
         </div>
@@ -168,7 +199,7 @@ export default function GalleryDetailPage() {
                     className="overflow-hidden rounded-3xl border bg-card text-right transition hover:-translate-y-0.5 hover:shadow-lg"
                   >
                     <div className="aspect-[4/3]">
-                      <img src={toImageUrl(image)} alt="" className="h-full w-full object-cover" />
+                      <img src={toImageUrl(image)} alt={`${item.title} — صورة ${index + 1}`} className="h-full w-full object-cover" />
                     </div>
                   </button>
                 </Reveal>

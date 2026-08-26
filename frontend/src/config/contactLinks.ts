@@ -23,6 +23,29 @@ export const CONTACT_PLACEHOLDERS = {
   facebook: "https://facebook.com/",
 } as const;
 
+export function isDisplayablePhone(value: string): boolean {
+  const phone = value.trim();
+  if (!phone) return false;
+  if (/000000/.test(phone) || phone === "+966500000000") return false;
+  return true;
+}
+
+export function isDisplayableEmail(value: string): boolean {
+  const email = value.trim();
+  if (!email) return false;
+  if (email.includes("example.com")) return false;
+  return true;
+}
+
+export function isDisplayableSocial(href: string): boolean {
+  const url = href.trim();
+  if (!url) return false;
+  if (url === "https://instagram.com/" || url === "https://facebook.com/") return false;
+  if (url.includes("snapchat.com/add/") && url.endsWith("add/")) return false;
+  if (url.includes("example.com")) return false;
+  return true;
+}
+
 function normalizePhone(raw: string): string {
   return raw.trim();
 }
@@ -52,21 +75,25 @@ export function resolveContactLinks(settings?: Settings | null): ResolvedContact
   const facebook = CONTACT_PLACEHOLDERS.facebook;
   const tiktokUrl = (settings?.tiktokUrl || "").trim();
 
-  const socials: ResolvedContactLinks["socials"] = [
-    { key: "instagram", label: "Instagram", href: instagram },
-    { key: "snapchat", label: "Snapchat", href: snapchat },
-    { key: "facebook", label: "Facebook", href: facebook },
-  ];
+  const socials: ResolvedContactLinks["socials"] = (
+    [
+      { key: "instagram" as const, label: "Instagram", href: instagram },
+      { key: "snapchat" as const, label: "Snapchat", href: snapchat },
+      { key: "facebook" as const, label: "Facebook", href: facebook },
+    ] satisfies ResolvedContactLinks["socials"]
+  ).filter((item) => isDisplayableSocial(item.href));
 
-  if (tiktokUrl) {
+  if (tiktokUrl && isDisplayableSocial(tiktokUrl)) {
     socials.push({ key: "tiktok", label: "TikTok", href: tiktokUrl });
   }
 
-  socials.push({
-    key: "whatsapp",
-    label: "WhatsApp",
-    href: buildWhatsAppChatUrl(whatsappValue),
-  });
+  if (isDisplayablePhone(whatsappValue)) {
+    socials.push({
+      key: "whatsapp",
+      label: "WhatsApp",
+      href: buildWhatsAppChatUrl(whatsappValue),
+    });
+  }
 
   return {
     phone: { label: "الهاتف", value: phoneValue, href: `tel:${phoneValue}` },
@@ -74,7 +101,7 @@ export function resolveContactLinks(settings?: Settings | null): ResolvedContact
     whatsapp: {
       label: "واتساب",
       value: whatsappValue,
-      href: buildWhatsAppChatUrl(whatsappValue, "مرحباً، أود الاستفسار من خلال موقعكم الإلكتروني."),
+      href: buildWhatsAppChatUrl(whatsappValue, "مرحبا، نود الاستفسار من خلال موقعكم."),
     },
     socials,
   };

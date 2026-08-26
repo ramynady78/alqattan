@@ -45,27 +45,35 @@ export function PublicPageHero({
             centered ? "text-center" : "text-right",
           )}
         >
-          <div
+          <nav
+            aria-label="مسار التنقل"
             className={cn(
-              "mb-5 flex flex-wrap items-center gap-2 text-sm text-white/82",
-              centered ? "justify-center" : "justify-start",
+              "mb-5 text-sm text-white/82",
+              centered ? "text-center" : "text-right",
             )}
           >
-            {breadcrumbs.map((item, index) => (
-              <div key={`${item.label}-${index}`} className="flex items-center gap-2">
-                {item.href ? (
-                  <Link to={item.href} className="transition-colors hover:text-white">
-                    {item.label}
-                  </Link>
-                ) : (
-                  <span className="text-white font-medium">{item.label}</span>
-                )}
-                {index < breadcrumbs.length - 1 ? (
-                  <ChevronLeft className="h-4 w-4 text-white/60" />
-                ) : null}
-              </div>
-            ))}
-          </div>
+            <ol
+              className={cn(
+                "flex flex-wrap items-center gap-2",
+                centered ? "justify-center" : "justify-start",
+              )}
+            >
+              {breadcrumbs.map((item, index) => (
+                <li key={`${item.label}-${index}`} className="flex items-center gap-2">
+                  {item.href ? (
+                    <Link to={item.href} className="transition-colors hover:text-white">
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <span className="text-white font-medium">{item.label}</span>
+                  )}
+                  {index < breadcrumbs.length - 1 ? (
+                    <ChevronLeft className="h-4 w-4 text-white/60" aria-hidden="true" />
+                  ) : null}
+                </li>
+              ))}
+            </ol>
+          </nav>
 
           <div className="rounded-[2rem] border border-white/12 bg-white/10 px-5 py-7 shadow-[0_24px_70px_rgba(17,12,7,0.18)] sm:px-8 sm:py-9 md:px-10">
             <p className="mb-3 text-sm font-medium tracking-[0.2em] text-white/72">

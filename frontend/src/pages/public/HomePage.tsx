@@ -1,4 +1,5 @@
 import { useGetSettings, useListCategories, useListProducts, useListGallery } from "@workspace/api-client-react";
+import { useMemo } from "react";
 import { Hero, type HeroSlide } from "@/components/site/Hero";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { CategoryCard } from "@/components/site/CategoryCard";
@@ -7,7 +8,6 @@ import { GalleryGrid } from "@/components/site/GalleryGrid";
 import { WhatsappButton } from "@/components/site/WhatsappButton";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, BadgeDollarSign, Layers, Ruler, ShieldCheck, Sparkles, Wrench } from "lucide-react";
-import { useDocumentTitle } from "@/lib/seo";
 import { Reveal } from "@/components/motion/Reveal";
 import { Link } from "react-router-dom";
 import {
@@ -18,6 +18,11 @@ import {
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { SITE_NAME_AR } from "@/config/site";
+import { HOME_H1 } from "@/seo/content";
+import { staticPageSeo } from "@/seo/pages";
+import { usePageSeo } from "@/seo/usePageSeo";
+import { getClientSiteUrl } from "@/seo/apply";
+import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "@/seo/schema";
 
 export default function HomePage() {
   const settingsQuery = useGetSettings();
@@ -30,7 +35,21 @@ export default function HomePage() {
   const { data: products } = productsQuery;
   const { data: gallery } = galleryQuery;
 
-  useDocumentTitle("الرئيسية");
+  const homeSeo = useMemo(
+    () =>
+      staticPageSeo("home", {
+        jsonLd: [
+          buildOrganizationJsonLd(getClientSiteUrl(), {
+            phone: settings?.phone,
+            email: settings?.email,
+            sameAs: [settings?.instagram, settings?.snapchat, settings?.tiktokUrl, settings?.twitter],
+          }),
+          buildWebSiteJsonLd(getClientSiteUrl()),
+        ],
+      }),
+    [settings],
+  );
+  usePageSeo(homeSeo);
 
   const featuredCategories = Array.isArray(categories) ? categories.slice(0, 3) : [];
   const galleryPreview = Array.isArray(gallery) ? gallery.slice(0, 6) : [];
@@ -41,16 +60,16 @@ export default function HomePage() {
       imageUrl:
         "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2400&q=80",
       heading: settings?.heroTitle || SITE_NAME_AR,
-      subheading: settings?.heroSubtitle || "أناقة تليق بمنزلك… وفخامة تُصمَّم لتدوم.",
-      primaryCta: { label: "تصفح المنتجات", href: "/products" },
+      subheading: settings?.heroSubtitle || "أناقة تليق بمنازلكم، وتفاصيل تصمم بعناية تناسب مساحتكم.",
+      primaryCta: { label: "اختاروا من تصاميمنا", href: "/products" },
     },
     {
       id: "craft",
       imageUrl:
         "https://images.unsplash.com/photo-1544984243-ec57ea16fe25?auto=format&fit=crop&w=2400&q=80",
-      heading: "أناقة تُحاك بعناية",
-      subheading: "اختيار الخامة، دقة التنفيذ، ولمسة نهائية تليق بذوقك الرفيع.",
-      primaryCta: { label: "اكتشف التصنيفات", href: "/categories" },
+      heading: "أناقة تحاك بعناية",
+      subheading: "اختيار الخامة، دقة التنفيذ، ولمسة نهائية تليق بذوقكم.",
+      primaryCta: { label: "اكتشفوا التصنيفات", href: "/categories" },
     },
     {
       id: "bespoke",
@@ -58,13 +77,42 @@ export default function HomePage() {
         "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=2400&q=80",
       heading: "تفصيل حسب الطلب",
       subheading: "من الفكرة إلى التركيب… تجربة سلسة ومريحة في كل خطوة.",
-      primaryCta: { label: "اطلب استشارة", href: "/contact" },
+      primaryCta: { label: "تواصلوا معنا للطلب", href: "/contact" },
     },
   ];
 
   return (
     <div>
-      <Hero slides={slides} />
+      <Hero slides={slides} heading={HOME_H1} />
+
+      <section className="lux-section lux-noise">
+        <div className="lux-container">
+          <Reveal>
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                في {SITE_NAME_AR} نقدم ستائر عصرية بتصاميم فاخرة تناسب مختلف المساحات والأذواق.
+                تصفحوا{" "}
+                <Link to="/categories" className="text-primary hover:underline">
+                  تصنيفات الستائر
+                </Link>{" "}
+                و{" "}
+                <Link to="/products" className="text-primary hover:underline">
+                  تشكيلتنا
+                </Link>
+                ، واستلهموا من{" "}
+                <Link to="/gallery" className="text-primary hover:underline">
+                  أعمالنا
+                </Link>
+                ، ثم{" "}
+                <Link to="/contact" className="text-primary hover:underline">
+                  تواصلوا معنا
+                </Link>{" "}
+                لنساعدكم تختارون التصميم اللي يناسب مساحتكم.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
       <section className="lux-section lux-noise">
         <div className="lux-container">
@@ -110,7 +158,7 @@ export default function HomePage() {
       <section className="lux-section bg-muted/20">
         <div className="lux-container">
           <Reveal>
-            <SectionHeader title="منتجات مختارة" subtitle="الأكثر طلباً" align="center" />
+            <SectionHeader title="منتجات مختارة" subtitle="الأكثر طلبا" align="center" />
           </Reveal>
 
           {productsQuery.isLoading ? (
@@ -133,7 +181,7 @@ export default function HomePage() {
               <div className="text-center mt-12">
                 <Link to="/products">
                   <Button variant="outline" size="lg" className="font-serif rounded-full px-8">
-                    تصفح المنتجات
+                    اختاروا من تصاميمنا
                   </Button>
                 </Link>
               </div>
@@ -154,7 +202,7 @@ export default function HomePage() {
             <div className="text-center max-w-3xl mx-auto">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold mb-4 sm:mb-5">لماذا {SITE_NAME_AR}؟</h2>
               <p className="text-primary-foreground/85 leading-relaxed">
-                نُقدّم تجربة راقية من البداية حتى النهاية… لأن الفخامة ليست مظهراً فقط، بل جودةٌ وخدمةٌ واهتمامٌ بالتفاصيل.
+                نقدم تجربة واضحة من البداية حتى النهاية، لأن جمال الستارة يظهر في التفاصيل وجودة التنفيذ وملاءمتها للمساحة.
               </p>
             </div>
           </Reveal>
@@ -235,7 +283,7 @@ export default function HomePage() {
               <div className="text-center mt-12">
                 <Link to="/gallery">
                   <Button variant="outline" size="lg" className="font-serif rounded-full px-8">
-                    عرض المعرض كاملاً
+                    عرض المعرض كاملا
                   </Button>
                 </Link>
               </div>
@@ -249,13 +297,13 @@ export default function HomePage() {
       <section className="lux-section bg-card border-t border-b">
         <div className="lux-container text-center">
           <Reveal>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4 sm:mb-6">هل تبحث عن تصميم مخصص؟</h2>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4 sm:mb-6">هل تبحثون عن تصميم مخصص؟</h2>
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed">
-              فريقنا جاهز لتلبية طلباتك وتصميم الستائر التي تناسب مساحتك بدقة واحترافية.
+              فريقنا جاهز يساعدكم تختارون التصميم اللي يناسب مساحتكم وذوقكم، من الفكرة حتى التنفيذ.
             </p>
             <Link to="/contact">
               <Button size="lg" className="font-serif h-14 px-8 text-lg rounded-full">
-                تواصل معنا الآن
+                تواصلوا معنا للطلب
                 <ArrowLeft className="mr-2 h-5 w-5" />
               </Button>
             </Link>

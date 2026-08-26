@@ -16,9 +16,12 @@ import { useCart } from "@/lib/inquiryCart";
 import { toast } from "sonner";
 import { ShoppingBag, MessageCircle } from "lucide-react";
 import { buildWhatsAppUrl, formatProductMessage } from "@/lib/whatsapp";
-import { useDocumentTitle } from "@/lib/seo";
 import { Reveal } from "@/components/motion/Reveal";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { productLoadingSeo, productPageSeo, staticPageSeo } from "@/seo/pages";
+import { usePageSeo } from "@/seo/usePageSeo";
+import { buildProductFallbackCopy } from "@/seo/content";
+import { buildCategoryUrl } from "@/lib/routes";
 
 export default function ProductDetailPage() {
   const { slug = "" } = useParams<{ slug: string }>();
@@ -34,7 +37,13 @@ export default function ProductDetailPage() {
   const { data: settings } = useGetSettings();
   const { addItem } = useCart();
 
-  useDocumentTitle(product?.name || "تفاصيل المنتج");
+  usePageSeo(
+    isLoading
+      ? productLoadingSeo(slug)
+      : product
+        ? productPageSeo(product)
+        : { ...staticPageSeo("notFound"), path: slug ? `/products/${slug}` : "/products" },
+  );
 
   const images = useMemo(() => (product?.images && product.images.length > 0 ? product.images : []), [product?.images]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -62,8 +71,8 @@ export default function ProductDetailPage() {
       <div className="lux-section lux-noise">
         <div className="lux-container text-center py-20">
           <Reveal>
-            <h2 className="text-2xl font-serif mb-4">المنتج غير موجود</h2>
-            <p className="text-muted-foreground mb-8">عذراً، لم نتمكن من العثور على المنتج المطلوب.</p>
+            <h1 className="text-2xl font-serif mb-4">المنتج غير موجود</h1>
+            <p className="text-muted-foreground mb-8">عذرا، لم نتمكن من العثور على المنتج المطلوب.</p>
             <Button variant="outline" className="rounded-full px-8" onClick={() => window.history.back()}>
               العودة
             </Button>
@@ -80,7 +89,7 @@ export default function ProductDetailPage() {
 
   const handleWhatsApp = () => {
     if (!settings?.whatsapp) {
-      toast.error("رقم الواتساب غير متوفر حالياً");
+      toast.error("رقم الواتساب غير متوفر حاليا");
       return;
     }
     const url = buildWhatsAppUrl(settings.whatsapp, formatProductMessage(product));
@@ -90,6 +99,19 @@ export default function ProductDetailPage() {
   return (
     <div className="lux-section lux-noise">
       <div className="lux-container">
+          <nav className="mb-6 text-sm text-muted-foreground" aria-label="مسار التنقل">
+            <ol className="flex flex-wrap items-center gap-2">
+              <li>
+                <Link to="/" className="hover:text-primary">الرئيسية</Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li>
+                <Link to="/products" className="hover:text-primary">المنتجات</Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li className="text-foreground font-medium">{product.name}</li>
+            </ol>
+          </nav>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 md:gap-12 mb-10 sm:mb-16 items-start">
             <Reveal>
               <div className="space-y-4">
@@ -119,7 +141,7 @@ export default function ProductDetailPage() {
                           }`}
                           aria-label={`صورة ${i + 1}`}
                         >
-                          <img src={toImageUrl(img)} alt="" className="w-full h-full object-cover" />
+                          <img src={toImageUrl(img)} alt={`${product.name} — صورة ${i + 1}`} className="w-full h-full object-cover" />
                         </button>
                       );
                     })}
@@ -131,9 +153,11 @@ export default function ProductDetailPage() {
             <Reveal delay={0.05}>
               <div className="rounded-2xl sm:rounded-3xl lux-surface lux-outline p-5 sm:p-7 md:p-8">
                 {product.categoryName && (
-                  <Badge variant="outline" className="mb-4 text-sm font-medium tracking-wide">
-                    {product.categoryName}
-                  </Badge>
+                  <Link to={buildCategoryUrl({ id: product.categoryId })}>
+                    <Badge variant="outline" className="mb-4 text-sm font-medium tracking-wide">
+                      {product.categoryName}
+                    </Badge>
+                  </Link>
                 )}
 
                 <h1 className="text-2xl sm:text-3xl md:text-5xl font-serif font-bold text-foreground mb-3 leading-tight">
@@ -153,17 +177,21 @@ export default function ProductDetailPage() {
 
                 <Separator className="my-7" />
 
-                {product.description && (
+                {product.description ? (
                   <div className="prose prose-stone max-w-none dark:prose-invert">
                     <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
                       {product.description}
                     </p>
                   </div>
+                ) : (
+                  <p className="text-foreground/80 leading-relaxed text-lg">
+                    {buildProductFallbackCopy(product.name, product.categoryName)}
+                  </p>
                 )}
 
                 {product.specs && (
                   <div className="mt-7">
-                    <h3 className="font-serif text-xl font-bold mb-3">المواصفات</h3>
+                    <h2 className="font-serif text-xl font-bold mb-3">المواصفات</h2>
                     <p className="text-foreground/70 leading-relaxed whitespace-pre-wrap">{product.specs}</p>
                   </div>
                 )}
@@ -171,7 +199,7 @@ export default function ProductDetailPage() {
                 <div className="mt-10 flex flex-col sm:flex-row gap-3">
                   <Button size="lg" className="flex-1 h-14 text-base rounded-full" onClick={handleAdd}>
                     <ShoppingBag className="ml-2 h-5 w-5" />
-                    إضافة للاستفسار
+                    أضيفوا للاستفسار
                   </Button>
                   <Button
                     size="lg"
@@ -180,7 +208,7 @@ export default function ProductDetailPage() {
                     onClick={handleWhatsApp}
                   >
                     <MessageCircle className="ml-2 h-5 w-5" />
-                    استفسار واتساب
+                    تواصلوا معنا عبر واتساب
                   </Button>
                 </div>
               </div>
